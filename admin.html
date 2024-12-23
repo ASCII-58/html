@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .inner-lift {
+        background-color: aqua;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 20%;
+      }
+      .inner-head {
+        background-color: red;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        height: 10%;
+        width: 78vw;
+        border-radius: 20px;
+      }
+      .loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgb(0, 0, 0);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: opacity 1s;
+        z-index: 1000;
+        opacity: 1;
+      }
+
+      .loading-text {
+        animation: blink 2s infinite;
+        font-size: 60px;
+        color: white;
+      }
+
+      .error-text {
+        color: red;
+        display: none;
+      }
+
+      @keyframes blink {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      .content {
+        position: relative;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #333;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .welcome-message {
+        font-size: 2em;
+        margin-bottom: 20px;
+      }
+
+      .logout-button {
+        padding: 10px 20px;
+        font-size: 1em;
+        background-color: #ff4d4f;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .logout-button:hover {
+        background-color: #ff1919;
+      }
+    </style>
+    <title>Admin Page</title>
+  </head>
+  <body>
+    <div class="loading">
+      <p class="loading-text"><b>验证中</b></p>
+      <p class="error-text">登录失败,请重新登录</p>
+    </div>
+    <script>
+      // 等待3s后隐藏loading页面
+      setTimeout(function () {
+        document.querySelector(".loading").style.opacity = 0;
+        // 等待1s后将loading页面从DOM中移除
+        setTimeout(function () {
+          document.querySelector(".loading").remove();
+        }, 1000);
+      }, 3000);
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+        const userType = localStorage.getItem("userType");
+        if (!isLoggedIn || userType !== "admin") {
+          window.location.href = "login.html";
+        }
+      });
+    </script>
+    <div style="height: 100vh; position: relative;">
+      <div class="inner-lift">
+        <ul>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+      </div>
+      <div class="inner-head"></div>
+      <div class="content">
+        <h1 class="welcome-message" id="greeting"></h1>
+        <button class="logout-button" onclick="logout()">退出登录</button>
+      </div>
+    </div>
+
+    <script>
+      // 显示欢迎信息
+      const currentUser = localStorage.getItem("currentUser");
+      document.getElementById("greeting").textContent = `您好, ${currentUser}`;
+
+      /**
+       * 注销登录
+       */
+      function logout() {
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("currentUser");
+        localStorage.removeItem("loginExpiration");
+        localStorage.removeItem("userType");
+        window.location.href = "login.html";
+      }
+    </script>
+  </body>
+</html>

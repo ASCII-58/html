@@ -41,6 +41,26 @@
         font-weight: 600;
       }
 
+      /* 切换按钮样式，设置宽度、内边距、背景颜色、文本颜色、边框、边框圆角、字体大小、字体粗细、光标样式和过渡效果 */
+      .toggle-button {
+        width: 100%;
+        padding: 10px;
+        background: #e2e8f0;
+        color: #2d3748;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+      }
+
+      /* 切换按钮悬停时的样式，设置背景颜色 */
+      .toggle-button:hover {
+        background: #cbd5e0;
+      }
+
       /* 表单组样式，设置下边距 */
       .form-group {
         margin-bottom: 20px;
@@ -128,9 +148,10 @@
           margin-bottom: 25px;
         }
 
-        /* 输入框和按钮样式，设置内边距和字体大小 */
+        /* 输入框、按钮和切换按钮样式，设置内边距和字体大小 */
         input,
-        button {
+        button,
+        .toggle-button {
           padding: 10px;
           font-size: 15px;
         }
@@ -140,7 +161,8 @@
   </head>
   <body>
     <div class="container">
-      <h2>欢迎登录</h2>
+      <h2 id="loginTitle">欢迎登录</h2>
+      <button class="toggle-button" onclick="toggleUserType()">切换到管理员登录</button>
       <div class="form-group">
         <input
           type="text"
@@ -164,6 +186,8 @@
     </div>
 
     <script>
+      let userType = "user"; // 默认用户类型为普通用户
+
       /**
        * 异步读取JSON文件并返回解析后的数据
        * @param {string} filePath - JSON文件的路径
@@ -171,14 +195,20 @@
        */
       async function readJsonFile(filePath) {
         try {
+          console.log(`Fetching file from ${filePath}`);
           // 发送请求获取文件内容
           const response = await fetch(filePath);
+          console.log("Response received:", response);
+
           // 如果响应状态不是200，抛出错误
           if (!response.ok) {
-            throw new Error("Network response was not ok");
+            throw new Error(`Network response was not ok: ${response.statusText}`);
           }
+
           // 解析响应内容为JSON并返回
-          return await response.json();
+          const data = await response.json();
+          console.log("Parsed JSON data:", data);
+          return data;
         } catch (error) {
           // 捕获并打印错误信息
           console.error("读取文件出错：", error);
@@ -196,27 +226,56 @@
         const errorMessage = document.getElementById("errorMessage");
 
         try {
+          console.log(`Attempting to log in as ${username} with user type ${userType}`);
+
           const jsonData = await readJsonFile("./json/login.json");
-          const user = jsonData.users.find(
+          if (!jsonData) {
+            throw new Error("Failed to load login data");
+          }
+
+          const userArray = userType === "user" ? jsonData.users : jsonData.admins;
+          const user = userArray.find(
             (u) => u.username === username && u.password === password
           );
 
           if (user) {
+            console.log("User found and authenticated successfully.");
+
             // 设置过期时间为24小时后
             const expirationTime = Date.now() + 24 * 60 * 60 * 1000;
 
             localStorage.setItem("isLoggedIn", "true");
             localStorage.setItem("currentUser", username);
             localStorage.setItem("loginExpiration", expirationTime);
+            localStorage.setItem("userType", userType); // 存储用户类型
 
-            window.location.href = "index.html";
+            window.location.href = userType === "user" ? "user.html" : "admin.html";
           } else {
+            console.log("User not found or incorrect credentials.");
             errorMessage.textContent = "用户名或密码错误";
             errorMessage.style.display = "block";
           }
         } catch (error) {
+          console.error("Error during login process:", error);
           errorMessage.textContent = "系统错误，请稍后重试";
           errorMessage.style.display = "block";
+        }
+      }
+
+      /**
+       * 切换用户类型
+       */
+      function toggleUserType() {
+        userType = userType === "user" ? "admin" : "user";
+        const button = document.querySelector(".toggle-button");
+        const title = document.getElementById("loginTitle");
+
+        if (userType === "user") {
+          button.textContent = "切换到管理员登录";
+          title.textContent = "欢迎登录";
+        } else {
+          button.textContent = "切换到普通用户登录";
+          title.textContent = "管理员登录";
         }
       }
 
@@ -229,6 +288,7 @@
             localStorage.removeItem("isLoggedIn");
             localStorage.removeItem("currentUser");
             localStorage.removeItem("loginExpiration");
+            localStorage.removeItem("userType"); // 清除用户类型
             return false;
           }
           return true;
@@ -240,6 +300,7 @@
       localStorage.removeItem("isLoggedIn");
       localStorage.removeItem("currentUser");
       localStorage.removeItem("loginExpiration");
+      localStorage.removeItem("userType"); // 清除用户类型
 
       document.addEventListener("keypress", (e) => {
         if (e.key === "Enter") login();
@@ -247,3 +308,6 @@
     </script>
   </body>
 </html>
+
+
+
