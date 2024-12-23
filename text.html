@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>登录页面</title>
+</head>
+<body>
+    <script>
+        function xorStrings(str1, str2) {
+    let result = "";
+    const len = Math.min(str1.length, str2.length);
+    for (let i = 0; i < len; i++) {
+        const charCode1 = str1.charCodeAt(i);
+        const charCode2 = str2.charCodeAt(i);
+        result += String.fromCharCode(charCode1 ^ charCode2);
+    }
+    return result;
+    }
+
+// }sbd
+
+    </script>
+        
+</body>
+</html>

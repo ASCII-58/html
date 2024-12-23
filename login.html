@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      /* 全局样式重置，设置所有元素的外边距、内边距和盒模型为 border-box */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* 页面主体样式，设置字体、背景渐变、最小高度、弹性布局以及内边距 */
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      /* 容器样式，设置背景颜色、内边距、边框圆角、阴影以及最大宽度 */
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+      }
+
+      /* 标题样式，设置颜色、文本对齐方式、下边距、字体大小和字体粗细 */
+      h2 {
+        color: #2d3748;
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 28px;
+        font-weight: 600;
+      }
+
+      /* 表单组样式，设置下边距 */
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      /* 输入框样式，设置宽度、内边距、边框、边框圆角、字体大小、过渡效果和轮廓 */
+      input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        outline: none;
+      }
+
+      /* 输入框聚焦时的样式，设置边框颜色和阴影 */
+      input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      /* 输入框占位符样式，设置颜色 */
+      input::placeholder {
+        color: #a0aec0;
+      }
+
+      /* 按钮样式，设置宽度、内边距、背景颜色、文本颜色、边框、边框圆角、字体大小、字体粗细、光标样式和过渡效果 */
+      button {
+        width: 100%;
+        padding: 12px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      /* 按钮悬停时的样式，设置背景颜色和向上移动 */
+      button:hover {
+        background: #5a67d8;
+        transform: translateY(-1px);
+      }
+
+      /* 按钮按下时的样式，设置向下移动 */
+      button:active {
+        transform: translateY(1px);
+      }
+
+      /* 错误消息样式，设置颜色、文本对齐方式、上边距、字体大小和初始隐藏状态 */
+      .error-message {
+        color: #e53e3e;
+        text-align: center;
+        margin-top: 15px;
+        font-size: 14px;
+        display: none;
+        animation: fadeIn 0.3s ease;
+      }
+
+      /* 错误消息淡入动画 */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* 响应式设计，当屏幕宽度小于等于480px时应用以下样式 */
+      @media (max-width: 480px) {
+        /* 容器样式，设置内边距 */
+        .container {
+          padding: 30px 20px;
+        }
+
+        /* 标题样式，设置字体大小和下边距 */
+        h2 {
+          font-size: 24px;
+          margin-bottom: 25px;
+        }
+
+        /* 输入框和按钮样式，设置内边距和字体大小 */
+        input,
+        button {
+          padding: 10px;
+          font-size: 15px;
+        }
+      }
+    </style>
+    <title>login</title>
+  </head>
+  <body>
+    <div class="container">
+      <h2>欢迎登录</h2>
+      <div class="form-group">
+        <input
+          type="text"
+          id="username"
+          placeholder="请输入用户名"
+          required
+          autocomplete="username"
+        />
+      </div>
+      <div class="form-group">
+        <input
+          type="password"
+          id="password"
+          placeholder="请输入密码"
+          required
+          autocomplete="current-password"
+        />
+      </div>
+      <button onclick="login()">登 录</button>
+      <p class="error-message" id="errorMessage">用户名或密码错误</p>
+    </div>
+
+    <script>
+      /**
+       * 异步读取JSON文件并返回解析后的数据
+       * @param {string} filePath - JSON文件的路径
+       * @returns {Promise<object>} - 解析后的JSON数据
+       */
+      async function readJsonFile(filePath) {
+        try {
+          // 发送请求获取文件内容
+          const response = await fetch(filePath);
+          // 如果响应状态不是200，抛出错误
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          // 解析响应内容为JSON并返回
+          return await response.json();
+        } catch (error) {
+          // 捕获并打印错误信息
+          console.error("读取文件出错：", error);
+          return null;
+        }
+      }
+
+      /**
+       * 处理用户登录逻辑
+       * @returns {Promise<void>}
+       */
+      async function login() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const errorMessage = document.getElementById("errorMessage");
+
+        try {
+          const jsonData = await readJsonFile("./json/login.json");
+          const user = jsonData.users.find(
+            (u) => u.username === username && u.password === password
+          );
+
+          if (user) {
+            // 设置过期时间为24小时后
+            const expirationTime = Date.now() + 24 * 60 * 60 * 1000;
+
+            localStorage.setItem("isLoggedIn", "true");
+            localStorage.setItem("currentUser", username);
+            localStorage.setItem("loginExpiration", expirationTime);
+
+            window.location.href = "index.html";
+          } else {
+            errorMessage.textContent = "用户名或密码错误";
+            errorMessage.style.display = "block";
+          }
+        } catch (error) {
+          errorMessage.textContent = "系统错误，请稍后重试";
+          errorMessage.style.display = "block";
+        }
+      }
+
+      // 检查登录是否过期
+      function checkLoginExpiration() {
+        const expiration = localStorage.getItem("loginExpiration");
+        if (expiration) {
+          if (Date.now() > parseInt(expiration)) {
+            // 登录已过期，清除状态
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("currentUser");
+            localStorage.removeItem("loginExpiration");
+            return false;
+          }
+          return true;
+        }
+        return false;
+      }
+
+      // 初始化：清除之前的登录状态
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("currentUser");
+      localStorage.removeItem("loginExpiration");
+
+      document.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") login();
+      });
+    </script>
+  </body>
+</html>
