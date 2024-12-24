@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>管理员面板</title>
+    <link rel="shortcut icon" href="img/xy.ico" type="image/x-icon" />
     <style>
       * {
         margin: 0;
@@ -122,8 +123,7 @@
     </div>
 
     <div class="content">
-      <h1>欢迎使用管理系统</h1>
-      <div id="dashboardContent" class="content-section" style="display: none">
+      <div id="dashboardContent" class="content-section" style="display: block">
         <h1>仪表盘区域</h1>
       </div>
       <div id="userContent" class="content-section" style="display: none">
@@ -139,6 +139,15 @@
         <h1>系统设置区域</h1>
       </div>
     </div>
+    <script>
+      // 切换内容显示
+      function showContent(sectionId) {
+        document.querySelectorAll(".content-section").forEach((section) => {
+          section.style.display = "none";
+        });
+        document.getElementById(sectionId).style.display = "block";
+      }
+    </script>
 
     <script>
       // 检查登录状态和权限
@@ -160,14 +169,6 @@
       function logout() {
         localStorage.clear();
         window.location.href = "login.html";
-      }
-
-      // 切换内容显示
-      function showContent(sectionId) {
-        document.querySelectorAll(".content-section").forEach((section) => {
-          section.style.display = "none";
-        });
-        document.getElementById(sectionId).style.display = "block";
       }
     </script>
   </body>
