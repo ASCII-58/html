@@ -1,165 +1,174 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>管理员面板</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Microsoft YaHei', sans-serif;
-            
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Microsoft YaHei", sans-serif;
+      }
 
-        body {
-            min-height: 100vh;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        }
+      body {
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
 
-        .sidebar {
-            background: #001529;
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-            width: 250px;
-            color: white;
-            padding: 20px 0;
-        }
+      .sidebar {
+        background: #001529;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 250px;
+        color: white;
+        padding: 20px 0;
+      }
 
-        .logo {
-            text-align: center;
-            padding: 20px;
-            border-bottom: 1px solid #ffffff33;
-        }
+      .logo {
+        text-align: center;
+        padding: 20px;
+        border-bottom: 1px solid #ffffff33;
+      }
 
-        .menu {
-            padding: 20px;
-        }
+      .menu {
+        padding: 20px;
+      }
 
-        .menu-item {
-            padding: 12px 20px;
-            margin: 5px 0;
-            cursor: pointer;
-            transition: all 0.7s;
-            border-radius: 4px;
-        }
+      .menu-item {
+        padding: 12px 20px;
+        margin: 5px 0;
+        cursor: pointer;
+        transition: all 0.7s;
+        border-radius: 4px;
+      }
 
-        .menu-item:hover {
-            background: #00b3ff22;
-        }
+      .menu-item:hover {
+        background: #00b3ff22;
+      }
 
-        .header {
-            background: white;
-            position: fixed;
-            top: 0;
-            left: 250px;
-            right: 0;
-            height: 64px;
-            padding: 0 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 1px 4px rgba(0,21,41,0.08);
-        }
+      .header {
+        background: white;
+        position: fixed;
+        top: 0;
+        left: 250px;
+        right: 0;
+        height: 64px;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+      }
 
-        .content {
-            margin-left: 250px;
-            padding: 84px 20px 20px;
-        }
+      .content {
+        margin-left: 250px;
+        padding: 84px 20px 20px;
+      }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
 
-        .logout-btn {
-            padding: 6px 16px;
-            border: none;
-            background: #ff4d4f;
-            color: white;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+      .logout-btn {
+        padding: 6px 16px;
+        border: none;
+        background: #ff4d4f;
+        color: white;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
 
-        .logout-btn:hover {
-            background: #ff7875;
-        }
+      .logout-btn:hover {
+        background: #ff7875;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="sidebar">
-        <div class="logo">
-            <h2>管理系统</h2>
+      <div class="logo">
+        <h2>管理系统</h2>
+      </div>
+      <div class="menu">
+        <div class="menu-item" onclick="showContent('dashboardContent')">
+          仪表盘
         </div>
-        <div class="menu">
-            <div class="menu-item" onclick="showContent('dashboardContent')">仪表盘</div>
-            <div class="menu-item" onclick="showContent('userContent')">用户管理</div>
-            <div class="menu-item" onclick="showContent('partsContent')">配件管理</div>
-            <div class="menu-item" onclick="showContent('ordersContent')">订单管理</div>
-            <div class="menu-item" onclick="showContent('settingsContent')">系统设置</div>
+        <div class="menu-item" onclick="showContent('userContent')">
+          用户管理
         </div>
+        <div class="menu-item" onclick="showContent('partsContent')">
+          配件管理
+        </div>
+        <div class="menu-item" onclick="showContent('ordersContent')">
+          订单管理
+        </div>
+        <div class="menu-item" onclick="showContent('settingsContent')">
+          系统设置
+        </div>
+      </div>
     </div>
 
     <div class="header">
-        <h2>管理员面板</h2>
-        <div class="user-info">
-            <span id="adminName">管理员</span>
-            <button class="logout-btn" onclick="logout()">退出登录</button>
-        </div>
+      <h2>管理员面板</h2>
+      <div class="user-info">
+        <span id="adminName">管理员</span>
+        <button class="logout-btn" onclick="logout()">退出登录</button>
+      </div>
     </div>
 
     <div class="content">
-        <h1>欢迎使用管理系统</h1>
-        <div id="dashboardContent" class="content-section" style="display:none">
-            <h1>仪表盘区域</h1>
-        </div>
-        <div id="userContent" class="content-section" style="display:none">
-            <h1>用户管理区域</h1>
-        </div>
-        <div id="partsContent" class="content-section" style="display:none">
-            <h1>配件管理区域</h1>
-        </div>
-        <div id="ordersContent" class="content-section" style="display:none">
-            <h1>订单管理区域</h1>
-        </div>
-        <div id="settingsContent" class="content-section" style="display:none">
-            <h1>系统设置区域</h1>
-        </div>
+      <h1>欢迎使用管理系统</h1>
+      <div id="dashboardContent" class="content-section" style="display: none">
+        <h1>仪表盘区域</h1>
+      </div>
+      <div id="userContent" class="content-section" style="display: none">
+        <h1>用户管理区域</h1>
+      </div>
+      <div id="partsContent" class="content-section" style="display: none">
+        <h1>配件管理区域</h1>
+      </div>
+      <div id="ordersContent" class="content-section" style="display: none">
+        <h1>订单管理区域</h1>
+      </div>
+      <div id="settingsContent" class="content-section" style="display: none">
+        <h1>系统设置区域</h1>
+      </div>
     </div>
 
     <script>
-        // 检查登录状态和权限
-        window.onload = function() {
-            const userType = localStorage.getItem('userType');
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            const currentUser = localStorage.getItem('currentUser');
+      // 检查登录状态和权限
+      window.onload = function () {
+        const userType = localStorage.getItem("userType");
+        const isLoggedIn = localStorage.getItem("isLoggedIn");
+        const currentUser = localStorage.getItem("currentUser");
 
-            if (!isLoggedIn || userType !== 'admin') {
-                window.location.href = 'login.html';
-                return;
-            }
-
-            // 显示管理员名称
-            document.getElementById('adminName').textContent = currentUser;
+        if (!isLoggedIn || userType !== "admin") {
+          window.location.href = "login.html";
+          return;
         }
 
-        // 退出登录
-        function logout() {
-            localStorage.clear();
-            window.location.href = 'login.html';
-        }
+        // 显示管理员名称
+        document.getElementById("adminName").textContent = currentUser;
+      };
 
-        // 切换内容显示
-        function showContent(sectionId) {
-            document.querySelectorAll('.content-section').forEach((section) => {
-                section.style.display = 'none';
-            });
-            document.getElementById(sectionId).style.display = 'block';
-        }
+      // 退出登录
+      function logout() {
+        localStorage.clear();
+        window.location.href = "login.html";
+      }
+
+      // 切换内容显示
+      function showContent(sectionId) {
+        document.querySelectorAll(".content-section").forEach((section) => {
+          section.style.display = "none";
+        });
+        document.getElementById(sectionId).style.display = "block";
+      }
     </script>
-</body>
+  </body>
 </html>
