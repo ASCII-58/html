@@ -1,214 +1,616 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>登录系统</title>
-    <link rel="shortcut icon" href="img/xy.ico" type="image/x-icon">
+    <title>管理员登录</title>
+    <link rel="shortcut icon" href="img/xy.ico" type="image/x-icon" />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
 
-        body {
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+      :root {
+        --color-bg: #0d1117;
+        --color-text: #c9d1d9;
+        --color-border: #30363d;
+        --color-btn: #238636;
+        --color-btn-hover: #2ea043;
+        --color-input-bg: #0d1117;
+        --color-error: #f85149;
+        --cursor-x: 50%;
+        --cursor-y: 50%;
+        --input-x: 50%;
+        --input-y: 50%;
+        --glow-color: rgba(88, 166, 255, 0.15);
+      }
 
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-            transform: translateY(0);
-            transition: all 0.3s ease;
-        }
+      body {
+        min-height: 100vh;
+        background-color: var(--color-bg);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: var(--color-text);
+      }
 
-        .container:hover {
-            transform: translateY(-5px);
-        }
+      body::before {
+        content: "";
+        position: fixed;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(
+          circle at center,
+          var(--glow-color),
+          transparent 70%
+        );
+        pointer-events: none;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+        transition: all 0.1s ease;
+        left: var(--cursor-x);
+        top: var(--cursor-y);
+        filter: blur(5px);
+      }
 
-        .switch-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
+      .container {
+        background-color: #161b22;
+        padding: 32px;
+        border-radius: 6px;
+        border: 1px solid var(--color-border);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 308px;
+        text-align: center;
+        transition: transform 0.3s ease;
+      }
 
-        .switch-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            background: #f0f2f5;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 14px;
-            color: #666;
-        }
+      .container:hover {
+        transform: translateY(-10px);
+      }
 
-        .switch-btn.active {
-            background: #667eea;
-            color: white;
-            transform: scale(1.05);
-        }
+      .github-logo {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 24px;
+        filter: brightness(2);
+      }
 
-        h2 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 24px;
-            font-weight: 600;
-        }
+      h2 {
+        margin-bottom: 16px;
+        font-size: 24px;
+        font-weight: 300;
+        letter-spacing: -0.5px;
+        color: var(--color-text);
+        transition: color 0.3s ease;
+      }
 
-        .form-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
+      h2:hover {
+        color: #0366d6;
+      }
 
-        input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: all 0.3s;
-            outline: none;
-        }
+      .form-group {
+        margin-bottom: 16px;
+        position: relative;
+        overflow: hidden;
+      }
 
-        input:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
+      .form-group::after {
+        content: "";
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(
+          circle at var(--input-x) var(--input-y),
+          rgba(88, 166, 255, 0.2),
+          transparent 70%
+        );
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        transform: translate(-50%, -50%);
+        left: var(--input-x);
+        top: var(--input-y);
+        filter: blur(10px);
+      }
 
-        button {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+      .form-group:hover::after {
+        opacity: 1;
+      }
 
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
+      .form-group label {
+        display: block;
+        text-align: left;
+        font-size: 14px;
+        font-weight: 400;
+        margin-bottom: 8px;
+      }
 
-        .error-message {
-            color: #ff4d4f;
-            text-align: center;
-            margin-top: 15px;
-            font-size: 14px;
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
+      input {
+        width: 100%;
+        padding: 5px 12px;
+        border: 1px solid var(--color-border);
+        border-radius: 6px;
+        font-size: 14px;
+        line-height: 20px;
+        background-color: var(--color-input-bg);
+        color: var(--color-text);
+        outline: none;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+      input:focus {
+        border-color: #58a6ff;
+        box-shadow: 0 0 15px var(--glow-color);
+      }
 
-        @media (max-width: 480px) {
-            .container {
-                padding: 30px 20px;
-            }
+      input:focus + .underline {
+        transform: scaleX(1);
+      }
+
+      .underline {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: #0366d6;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s ease;
+      }
+
+      .login-btn {
+        width: 100%;
+        padding: 8px 16px;
+        border: 1px solid rgba(240, 246, 252, 0.1);
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        background-color: var(--color-btn);
+        color: #ffffff;
+        transition: background 0.3s ease, transform 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .login-btn:hover {
+        background-color: var(--color-btn-hover);
+        transform: translateY(-2px);
+      }
+
+      .login-btn:active {
+        animation: rotate 0.3s ease-in-out;
+      }
+
+      @keyframes rotate {
+        0% {
+          transform: rotate(0deg);
         }
+        50% {
+          transform: rotate(5deg);
+        }
+        100% {
+          transform: rotate(0deg);
+        }
+      }
+
+      .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(0);
+        animation: ripple-animation 0.6s linear infinite;
+      }
+
+      @keyframes ripple-animation {
+        to {
+          transform: scale(4);
+          opacity: 0;
+        }
+      }
+
+      .error-message {
+        color: var(--color-error);
+        margin-top: 8px;
+        font-size: 12px;
+        text-align: left;
+        display: none;
+        animation: fadeInBlink 0.3s ease forwards;
+      }
+
+      @keyframes fadeInBlink {
+        0% {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        50% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        100% {
+          opacity: 0.7;
+          transform: translateY(0);
+        }
+      }
+
+      /* 添加输入框标签 */
+      .input-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 8px;
+        text-align: left;
+      }
+
+      /* 全局光效 */
+      .light-effect {
+        pointer-events: none;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        z-index: 1;
+      }
+
+      /* 鼠标跟随光效 */
+      .cursor-glow {
+        position: fixed;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(
+          circle at center,
+          rgba(37, 99, 235, 0.15),
+          rgba(37, 99, 235, 0.08) 40%,
+          transparent 70%
+        );
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        z-index: 2;
+        transition: all 0.15s ease;
+        filter: blur(2px);
+        left: var(--cursor-x);
+        top: var(--cursor-y);
+      }
+
+      /* 输入框光效 */
+      .form-group {
+        position: relative;
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+      }
+
+      .form-group::after {
+        content: "";
+        position: absolute;
+        width: 250px;
+        height: 250px;
+        background: radial-gradient(
+          circle at var(--input-x) var(--input-y),
+          rgba(88, 166, 255, 0.2),
+          transparent 70%
+        );
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        transform: translate(-50%, -50%);
+        left: var(--input-x);
+        top: var(--input-y);
+        filter: blur(10px);
+      }
+
+      .form-group:hover::after {
+        opacity: 1;
+      }
+
+      /* 按钮光效 */
+      .login-btn {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .login-btn::before {
+        content: "";
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle at center,
+          rgba(255, 255, 255, 0.2),
+          transparent 70%
+        );
+        top: -50%;
+        left: -50%;
+        transform: scale(0);
+        transition: transform 0.3s ease;
+      }
+
+      .login-btn:hover::before {
+        transform: scale(1);
+      }
+
+      #canvas-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1000;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="switch-buttons">
-            <button id="userBtn" class="switch-btn active" onclick="switchRole('user')">用户登录</button>
-            <button id="adminBtn" class="switch-btn" onclick="switchRole('admin')">管理员登录</button>
-        </div>
-        <h2 id="loginTitle">欢迎登录</h2>
+      <img src="./img/favicon.ico" alt="Logo" class="github-logo" />
+      <h2>登录到系统</h2>
+      <form id="loginForm" onsubmit="event.preventDefault(); login();">
         <div class="form-group">
-            <input type="text" id="username" placeholder="请输入用户名" required autocomplete="username" />
+          <label class="input-label" for="username">用户名</label>
+          <input type="text" id="username" autocomplete="username" required />
         </div>
         <div class="form-group">
-            <input type="password" id="password" placeholder="请输入密码" required autocomplete="current-password" />
+          <label class="input-label" for="password">密码</label>
+          <input
+            type="password"
+            id="password"
+            autocomplete="current-password"
+            required
+          />
         </div>
-        <button onclick="login()">登 录</button>
+        <button type="submit" class="login-btn">登 录</button>
         <p class="error-message" id="errorMessage"></p>
+      </form>
     </div>
 
+    <canvas id="canvas-container"></canvas>
+
     <script>
-        let userType = "user";
+      async function readJsonFile(filePath) {
+        try {
+          const response = await fetch(filePath);
+          if (!response.ok) {
+            throw new Error(
+              `Network response was not ok: ${response.statusText}`
+            );
+          }
+          return await response.json();
+        } catch (error) {
+          console.error("读取文件出错：", error);
+          return null;
+        }
+      }
 
-        function switchRole(role) {
-            userType = role;
-            document.getElementById('userBtn').classList.toggle('active', role === 'user');
-            document.getElementById('adminBtn').classList.toggle('active', role === 'admin');
-            document.getElementById('loginTitle').textContent = role === 'user' ? '欢迎登录' : '管理员登录';
+      async function login() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const errorMessage = document.getElementById("errorMessage");
+
+        try {
+          const jsonData = await readJsonFile("./json/login.json");
+          if (!jsonData) {
+            throw new Error("Failed to load login data");
+          }
+
+          const adminArray = jsonData.admins;
+          const admin = adminArray.find(
+            (a) => a.username === username && a.password === password
+          );
+
+          if (admin) {
+            const expirationTime = Date.now() + 24 * 60 * 60 * 1000;
+            localStorage.setItem("isLoggedIn", "true");
+            localStorage.setItem("currentUser", username);
+            localStorage.setItem("loginExpiration", expirationTime);
+            localStorage.setItem("userType", "admin");
+
+            window.location.href = "admin.html";
+          } else {
+            showError("用户名或密码错误");
+          }
+        } catch (error) {
+          console.error("Error during login process:", error);
+          showError("系统错误，请稍后重试");
+        }
+      }
+
+      function checkLoginExpiration() {
+        const expiration = localStorage.getItem("loginExpiration");
+        if (expiration && Date.now() > parseInt(expiration)) {
+          localStorage.clear();
+        }
+      }
+
+      checkLoginExpiration();
+
+      // 添加波纹效果
+      function createRipple(event) {
+        const button = event.currentTarget;
+        const ripple = document.createElement("span");
+        const rect = button.getBoundingClientRect();
+
+        ripple.className = "ripple";
+        ripple.style.left = `${event.clientX - rect.left}px`;
+        ripple.style.top = `${event.clientY - rect.top}px`;
+
+        button.appendChild(ripple);
+        ripple.addEventListener("animationend", () => ripple.remove());
+      }
+
+      // 修改登录按钮事件监听
+      document
+        .querySelector(".login-btn")
+        .addEventListener("click", function (event) {
+          createRipple(event); // 保持波纹效果
+        });
+
+      // 添加表单提交事件监听
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault(); // 阻止表单默认提交
+          await login(); // 调用登录函数
+        });
+
+      // 显示错误信息
+      function showError(message) {
+        const errorMsg = document.getElementById("errorMessage");
+        errorMsg.style.display = "block"; // 显示错误信息
+        errorMsg.textContent = message;
+        errorMsg.classList.add("show");
+
+        setTimeout(() => {
+          errorMsg.classList.remove("show");
+          errorMsg.style.display = "none";
+        }, 3000);
+      }
+
+      // 修改现有的鼠标移动监听代码
+      document.addEventListener("mousemove", (e) => {
+        requestAnimationFrame(() => {
+          document.body.style.setProperty("--cursor-x", e.clientX + "px");
+          document.body.style.setProperty("--cursor-y", e.clientY + "px");
+        });
+      });
+
+      // 修改输入框光效代码
+      const inputElements = document.querySelectorAll("input");
+      inputElements.forEach((input) => {
+        const formGroup = input.closest(".form-group");
+
+        input.addEventListener("mousemove", (e) => {
+          if (formGroup) {
+            const rect = formGroup.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            formGroup.style.setProperty("--input-x", `${x}px`);
+            formGroup.style.setProperty("--input-y", `${y}px`);
+          }
+        });
+
+        input.addEventListener("mouseenter", () => {
+          if (formGroup) {
+            formGroup.style.setProperty(
+              "--glow-color",
+              "rgba(88, 166, 255, 0.3)"
+            );
+          }
+        });
+
+        input.addEventListener("mouseleave", () => {
+          if (formGroup) {
+            formGroup.style.setProperty(
+              "--glow-color",
+              "rgba(88, 166, 255, 0.15)"
+            );
+          }
+        });
+      });
+
+      const canvas = document.getElementById("canvas-container");
+      const ctx = canvas.getContext("2d");
+
+      // 设置canvas尺寸
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+
+      // 初始化
+      window.addEventListener("resize", resizeCanvas);
+      resizeCanvas();
+
+      // 粒子类
+      class Particle {
+        constructor(x, y) {
+          this.x = x;
+          this.y = y;
+          this.size = Math.random() * 3 + 1;
+          this.speedX = Math.random() * 2 - 1;
+          this.speedY = Math.random() * 2 - 1;
+          this.life = 1;
         }
 
-        async function readJsonFile(filePath) {
-            try {
-                const response = await fetch(filePath);
-                if (!response.ok) {
-                    throw new Error(`Network response was not ok: ${response.statusText}`);
-                }
-                return await response.json();
-            } catch (error) {
-                console.error("读取文件出错：", error);
-                return null;
-            }
+        update() {
+          this.x += this.speedX;
+          this.y += this.speedY;
+          this.life -= 0.01;
         }
 
-        async function login() {
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-            const errorMessage = document.getElementById("errorMessage");
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(88, 166, 255, ${this.life})`;
+          ctx.fill();
+        }
+      }
 
-            try {
-                const jsonData = await readJsonFile("./json/login.json");
-                if (!jsonData) {
-                    throw new Error("Failed to load login data");
-                }
+      let particles = [];
+      let mouse = {
+        x: undefined,
+        y: undefined,
+      };
 
-                const userArray = userType === "user" ? jsonData.users : jsonData.admins;
-                const user = userArray.find(u => u.username === username && u.password === password);
+      // 鼠标移动事件
+      window.addEventListener("mousemove", (e) => {
+        mouse.x = e.x;
+        mouse.y = e.y;
 
-                if (user) {
-                    const expirationTime = Date.now() + 24 * 60 * 60 * 1000;
-                    localStorage.setItem("isLoggedIn", "true");
-                    localStorage.setItem("currentUser", username);
-                    localStorage.setItem("loginExpiration", expirationTime);
-                    localStorage.setItem("userType", userType);
-                    
-                    window.location.href = userType === "user" ? "user.html" : "admin.html";
-                } else {
-                    errorMessage.textContent = "用户名或密码错误";
-                    errorMessage.style.display = "block";
-                }
-            } catch (error) {
-                console.error("Error during login process:", error);
-                errorMessage.textContent = "系统错误，请稍后重试";
-                errorMessage.style.display = "block";
-            }
+        // 添加新粒子
+        for (let i = 0; i < 3; i++) {
+          particles.push(new Particle(mouse.x, mouse.y));
+        }
+      });
+
+      // 动画循环
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // 更新和绘制粒子
+        for (let i = particles.length - 1; i >= 0; i--) {
+          particles[i].update();
+          particles[i].draw();
+
+          if (particles[i].life <= 0) {
+            particles.splice(i, 1);
+          }
         }
 
-        function checkLoginExpiration() {
-            const expiration = localStorage.getItem("loginExpiration");
-            if (expiration && Date.now() > parseInt(expiration)) {
-                localStorage.clear();
-            }
-        }
+        // 光晕效果
+        let gradient = ctx.createRadialGradient(
+          mouse.x,
+          mouse.y,
+          0,
+          mouse.x,
+          mouse.y,
+          100
+        );
+        gradient.addColorStop(0, "rgba(88, 166, 255, 0.2)");
+        gradient.addColorStop(1, "rgba(88, 166, 255, 0)");
 
-        checkLoginExpiration();
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+
+      // 输入框特效
+      const inputs = document.querySelectorAll("input");
+      inputs.forEach((input) => {
+        input.addEventListener("mouseover", () => {
+          input.style.boxShadow = "0 0 15px rgba(88, 166, 255, 0.5)";
+        });
+
+        input.addEventListener("mouseout", () => {
+          input.style.boxShadow = "none";
+        });
+      });
     </script>
-</body>
+  </body>
 </html>
