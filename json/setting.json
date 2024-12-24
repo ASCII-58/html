@@ -1,0 +1,17 @@
+{
+  "system": {
+    "name": "配件管理系统",
+    "version": "1.0.0",
+    "theme": {
+      "primary": "#1890ff",
+      "sidebar": "#001529",
+      "accent": "#ff4d4f"
+    },
+    "security": {
+      "passwordMinLength": 6,
+      "loginAttempts": 5,
+      "lockDuration": 30,
+      "sessionTimeout": 120
+    }
+  }
+}

@@ -2,7 +2,13 @@
   "users": [
     {
       "username": "LAQP",
-      "password": "123456"
+      "password": "123456",
+      "phone": "12345678901"
+    },
+    {
+      "username": "LAQP1",
+      "password": "123456",
+      "phone": "12345678900"
     }
   ],
   "admins": [

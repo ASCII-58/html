@@ -2,9 +2,18 @@
 <html>
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>管理员面板</title>
     <link rel="shortcut icon" href="img/xy.ico" type="image/x-icon" />
     <style>
+      :root {
+        --primary: #1890ff;
+        --sidebar: #001529;
+        --text: #333;
+        --border: #e8e8e8;
+        --hover: rgba(24, 144, 255, 0.1);
+      }
+
       * {
         margin: 0;
         padding: 0;
@@ -14,58 +23,89 @@
 
       body {
         min-height: 100vh;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f7fa;
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+      }
+
+      .container {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        min-height: 100vh;
       }
 
       .sidebar {
-        background: #001529;
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100vh;
-        width: 250px;
+        background: var(--sidebar);
         color: white;
-        padding: 20px 0;
+        padding: 0;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
       }
 
       .logo {
         text-align: center;
-        padding: 20px;
-        border-bottom: 1px solid #ffffff33;
+        padding: 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.02);
       }
 
       .menu {
-        padding: 20px;
+        padding: 16px 8px;
       }
 
       .menu-item {
-        padding: 12px 20px;
-        margin: 5px 0;
+        padding: 12px 24px;
+        margin: 4px 0;
         cursor: pointer;
-        transition: all 0.7s;
-        border-radius: 4px;
+        transition: all 0.3s ease;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: rgba(255, 255, 255, 0.85);
+        position: relative;
+        overflow: hidden;
       }
 
       .menu-item:hover {
-        background: #00b3ff22;
+        background: var(--hover);
+        color: var(--primary);
+        transform: translateX(4px);
+      }
+
+      .menu-item.active-menu-item {
+        background: var(--primary);
+        color: white;
+        font-weight: 500;
+      }
+
+      .menu-item svg {
+        width: 18px;
+        height: 18px;
+        transition: transform 0.3s ease;
+      }
+
+      .menu-item:hover svg {
+        transform: scale(1.1);
       }
 
       .header {
         background: white;
-        position: fixed;
-        top: 0;
-        left: 250px;
-        right: 0;
         height: 64px;
         padding: 0 20px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+        z-index: 1000;
+      }
+
+      .main-content {
+        padding: 2rem;
       }
 
       .content {
-        margin-left: 250px;
         padding: 84px 20px 20px;
       }
 
@@ -88,64 +128,440 @@
       .logout-btn:hover {
         background: #ff7875;
       }
+
+      .content-section {
+        display: none;
+        transition: opacity 0.3s ease;
+      }
+
+      .content-section.active {
+        display: block;
+        opacity: 1;
+      }
+
+      .dashboard-widgets {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+      }
+
+      .widget {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .widget:hover {
+        transform: translateY(-5px);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      th {
+        background: #f8f9fa;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f9fafc;
+      }
+
+      tr:hover {
+        background-color: #e9ecef;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 60px;
+          padding: 0;
+          z-index: 100;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .logo {
+          display: none;
+        }
+
+        .menu {
+          padding: 0;
+          width: 100%;
+          display: flex;
+          justify-content: space-around;
+        }
+
+        .menu-item {
+          padding: 8px;
+          margin: 0;
+          flex-direction: column;
+          font-size: 12px;
+          text-align: center;
+          gap: 4px;
+        }
+
+        .menu-item svg {
+          width: 16px;
+          height: 16px;
+        }
+
+        .main-content {
+          margin-bottom: 70px;
+          padding: 1rem;
+        }
+
+        .header {
+          padding: 0 15px;
+          height: 56px;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+        }
+
+        .content {
+          padding: 66px 10px 10px;
+        }
+
+        .dashboard-widgets {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 10px;
+        }
+
+        .widget {
+          padding: 15px;
+        }
+
+        .widget h3 {
+          font-size: 14px;
+        }
+
+        table {
+          display: block;
+          overflow-x: auto;
+          white-space: nowrap;
+        }
+
+        th,
+        td {
+          padding: 8px;
+          font-size: 14px;
+        }
+
+        .user-info {
+          font-size: 14px;
+        }
+
+        .logout-btn {
+          padding: 4px 12px;
+          font-size: 12px;
+        }
+
+        .content-section {
+          margin-top: 10px;
+        }
+      }
+      .settings-container {
+        background: white;
+        padding: 24px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .settings-group {
+        margin-bottom: 24px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .setting-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+
+      .setting-item label {
+        width: 120px;
+        font-weight: 500;
+      }
+
+      .setting-input {
+        flex: 1;
+        max-width: 300px;
+        padding: 8px 12px;
+        border: 1px solid #d9d9d9;
+        border-radius: 4px;
+      }
+
+      .settings-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .save-btn,
+      .reset-btn {
+        padding: 8px 24px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .save-btn {
+        background: var(--primary);
+        color: white;
+      }
+
+      .reset-btn {
+        background: #f0f0f0;
+        color: #666;
+      }
     </style>
   </head>
   <body>
-    <div class="sidebar">
-      <div class="logo">
-        <h2>管理系统</h2>
-      </div>
-      <div class="menu">
-        <div class="menu-item" onclick="showContent('dashboardContent')">
-          仪表盘
+    <div class="container">
+      <aside class="sidebar">
+        <div class="logo">
+          <h2>管理系统</h2>
         </div>
-        <div class="menu-item" onclick="showContent('userContent')">
-          用户管理
+        <div class="menu">
+          <div
+            class="menu-item active-menu-item"
+            onclick="showContent('dashboardContent')"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              style="width: 20px; height: 20px"
+            >
+              <path d="M12 2L2 22h20L12 2z" />
+            </svg>
+            仪表盘
+          </div>
+          <div class="menu-item" onclick="showContent('userContent')">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              style="width: 20px; height: 20px"
+            >
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v5h-2zm-1 8h4v-2h-4z"
+              />
+            </svg>
+            用户管理
+          </div>
+          <div class="menu-item" onclick="showContent('partsContent')">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              style="width: 20px; height: 20px"
+            >
+              <path
+                d="M19 3H5c-1.11 0-2 .89-2 2v14c0 1.11.89 2 2 2h14c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 16H5V5h14v14zM7 11v2h2v-2H7zm4 0v2h2v-2h-2zm4 0v2h2v-2h-2z"
+              />
+            </svg>
+            配件管理
+          </div>
+          <div class="menu-item" onclick="showContent('ordersContent')">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              style="width: 20px; height: 20px"
+            >
+              <path
+                d="M19 3H5c-1.11 0-2 .89-2 2v14c0 1.11.89 2 2 2h14c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 16H5V5h14v14zM7 11v2h2v-2H7zm4 0v2h2v-2h-2zm4 0v2h2v-2h-2z"
+              />
+            </svg>
+            订单管理
+          </div>
+          <div class="menu-item" onclick="showContent('settingsContent')">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              style="width: 20px; height: 20px"
+            >
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v5h-2zm-1 8h4v-2h-4z"
+              />
+            </svg>
+            系统设置
+          </div>
         </div>
-        <div class="menu-item" onclick="showContent('partsContent')">
-          配件管理
-        </div>
-        <div class="menu-item" onclick="showContent('ordersContent')">
-          订单管理
-        </div>
-        <div class="menu-item" onclick="showContent('settingsContent')">
-          系统设置
-        </div>
-      </div>
-    </div>
+      </aside>
 
-    <div class="header">
-      <h2>管理员面板</h2>
-      <div class="user-info">
-        <span id="adminName">管理员</span>
-        <button class="logout-btn" onclick="logout()">退出登录</button>
-      </div>
-    </div>
+      <main class="main-content">
+        <header class="header">
+          <h2>管理员面板</h2>
+          <div class="user-info">
+            <span id="adminName">管理员</span>
+            <button class="logout-btn" onclick="logout()">退出登录</button>
+          </div>
+        </header>
+        <div class="content">
+          <div id="dashboardContent" class="content-section active">
+            <div class="dashboard-widgets">
+              <div class="widget">
+                <h3>用户总数</h3>
+                <p id="totalUsers">0</p>
+              </div>
+              <div class="widget">
+                <h3>今日订单</h3>
+                <p id="todayOrders">0</p>
+              </div>
+              <div class="widget">
+                <h3>待处理订单</h3>
+                <p id="pendingOrders">0</p>
+              </div>
+              <div class="widget">
+                <h3>系统消息</h3>
+                <p id="systemMessages">0</p>
+              </div>
+            </div>
+            <script>
+              // 模拟获取数据
+              document.getElementById("totalUsers").textContent = 120;
+              document.getElementById("todayOrders").textContent = 15;
+              document.getElementById("pendingOrders").textContent = 5;
+              document.getElementById("systemMessages").textContent = 3;
+            </script>
+          </div>
+          <div id="userContent" class="content-section">
+            <h1>用户管理区域</h1>
+            <table>
+              <thead>
+                <tr>
+                  <th>用户名</th>
+                  <th>手机号</th>
+                  <th>角色</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div id="partsContent" class="content-section">
+            <h1>配件管理区域</h1>
+          </div>
+          <div id="ordersContent" class="content-section">
+            <h1>订单管理区域</h1>
+          </div>
+          <div id="settingsContent" class="content-section">
+            <h2 class="section-title">系统设置</h2>
 
-    <div class="content">
-      <div id="dashboardContent" class="content-section" style="display: block">
-        <h1>仪表盘区域</h1>
-      </div>
-      <div id="userContent" class="content-section" style="display: none">
-        <h1>用户管理区域</h1>
-      </div>
-      <div id="partsContent" class="content-section" style="display: none">
-        <h1>配件管理区域</h1>
-      </div>
-      <div id="ordersContent" class="content-section" style="display: none">
-        <h1>订单管理区域</h1>
-      </div>
-      <div id="settingsContent" class="content-section" style="display: none">
-        <h1>系统设置区域</h1>
-      </div>
+            <div class="settings-container">
+              <!-- 基础设置 -->
+              <div class="settings-group">
+                <h3>基础设置</h3>
+                <div class="setting-item">
+                  <label>系统名称</label>
+                  <input type="text" id="systemName" class="setting-input" />
+                </div>
+                <div class="setting-item">
+                  <label>系统版本</label>
+                  <input
+                    type="text"
+                    id="systemVersion"
+                    class="setting-input"
+                    readonly
+                  />
+                </div>
+              </div>
+
+              <!-- 主题设置 -->
+              <div class="settings-group">
+                <h3>主题设置</h3>
+                <div class="setting-item">
+                  <label>主题色</label>
+                  <input type="color" id="primaryColor" class="setting-input" />
+                </div>
+                <div class="setting-item">
+                  <label>侧边栏颜色</label>
+                  <input type="color" id="sidebarColor" class="setting-input" />
+                </div>
+              </div>
+
+              <!-- 安全设置 -->
+              <div class="settings-group">
+                <h3>安全设置</h3>
+                <div class="setting-item">
+                  <label>最小密码长度</label>
+                  <input
+                    type="number"
+                    id="passwordMinLength"
+                    class="setting-input"
+                  />
+                </div>
+                <div class="setting-item">
+                  <label>登录尝试次数</label>
+                  <input
+                    type="number"
+                    id="loginAttempts"
+                    class="setting-input"
+                  />
+                </div>
+                <div class="setting-item">
+                  <label>锁定时长(分钟)</label>
+                  <input
+                    type="number"
+                    id="lockDuration"
+                    class="setting-input"
+                  />
+                </div>
+              </div>
+
+              <div class="settings-actions">
+                <button onclick="saveSettings()" class="save-btn">
+                  保存设置
+                </button>
+                <button onclick="resetSettings()" class="reset-btn">
+                  重置默认
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
     <script>
       // 切换内容显示
       function showContent(sectionId) {
         document.querySelectorAll(".content-section").forEach((section) => {
-          section.style.display = "none";
+          section.classList.remove("active");
         });
-        document.getElementById(sectionId).style.display = "block";
+        document.getElementById(sectionId).classList.add("active");
+
+        document.querySelectorAll(".menu-item").forEach((item) => {
+          item.classList.remove("active-menu-item");
+        });
+        document
+          .querySelector(`.menu-item[onclick="showContent('${sectionId}')"]`)
+          .classList.add("active-menu-item");
       }
     </script>
 
@@ -163,6 +579,9 @@
 
         // 显示管理员名称
         document.getElementById("adminName").textContent = currentUser;
+
+        // 默认显示第一个内容
+        showContent("dashboardContent");
       };
 
       // 退出登录
@@ -170,6 +589,110 @@
         localStorage.clear();
         window.location.href = "login.html";
       }
+    </script>
+    <script>
+      // 修改 loadSettings 函数
+      async function loadSettings() {
+        try {
+          // 先尝试从 localStorage 获取设置
+          const savedSettings = localStorage.getItem("systemSettings");
+          let settings;
+
+          if (savedSettings) {
+            settings = JSON.parse(savedSettings);
+          } else {
+            // 如果没有保存的设置，从配置文件加载默认值
+            const response = await fetch("./json/setting.json");
+            settings = await response.json();
+            // 保存默认设置到 localStorage
+            localStorage.setItem("systemSettings", JSON.stringify(settings));
+          }
+
+          // 填充表单
+          document.getElementById("systemName").value = settings.system.name;
+          document.getElementById("systemVersion").value =
+            settings.system.version;
+          document.getElementById("primaryColor").value =
+            settings.system.theme.primary;
+          document.getElementById("sidebarColor").value =
+            settings.system.theme.sidebar;
+          document.getElementById("passwordMinLength").value =
+            settings.system.security.passwordMinLength;
+          document.getElementById("loginAttempts").value =
+            settings.system.security.loginAttempts;
+          document.getElementById("lockDuration").value =
+            settings.system.security.lockDuration;
+
+          // 应用主题设置
+          document.documentElement.style.setProperty(
+            "--primary",
+            settings.system.theme.primary
+          );
+          document.documentElement.style.setProperty(
+            "--sidebar",
+            settings.system.theme.sidebar
+          );
+        } catch (error) {
+          console.error("加载设置失败:", error);
+        }
+      }
+
+      // 替换原有的saveSettings函数
+      async function saveSettings() {
+        try {
+          const settings = {
+            system: {
+              name: document.getElementById("systemName").value,
+              version: document.getElementById("systemVersion").value,
+              theme: {
+                primary: document.getElementById("primaryColor").value,
+                sidebar: document.getElementById("sidebarColor").value,
+              },
+              security: {
+                passwordMinLength: parseInt(
+                  document.getElementById("passwordMinLength").value
+                ),
+                loginAttempts: parseInt(
+                  document.getElementById("loginAttempts").value
+                ),
+                lockDuration: parseInt(
+                  document.getElementById("lockDuration").value
+                ),
+              },
+            },
+          };
+
+          // 使用 localStorage 存储设置
+          localStorage.setItem("systemSettings", JSON.stringify(settings));
+
+          // 更新主题颜色
+          document.documentElement.style.setProperty(
+            "--primary",
+            settings.system.theme.primary
+          );
+          document.documentElement.style.setProperty(
+            "--sidebar",
+            settings.system.theme.sidebar
+          );
+
+          alert("设置保存成功");
+        } catch (error) {
+          console.error("保存设置失败:", error);
+          alert("保存设置失败");
+        }
+      }
+
+      // 添加重置设置功能
+      async function resetSettings() {
+        if (confirm("确定要重置所有设置吗？")) {
+          localStorage.removeItem("systemSettings");
+          await loadSettings();
+          alert("设置已重置为默认值");
+        }
+      }
+
+      // 页面加载时初始化设置
+      document.addEventListener("DOMContentLoaded", loadSettings);
     </script>
   </body>
 </html>
