@@ -5,7 +5,7 @@
       "password": "123456"
     }
   ],
-  "admin": [
+  "admins": [
     {
       "username": "admin",
       "password": "123456"
