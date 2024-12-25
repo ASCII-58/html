@@ -12,6 +12,8 @@
         --text: #333;
         --border: #e8e8e8;
         --hover: rgba(24, 144, 255, 0.1);
+        --cursor-x: 50%;
+        --cursor-y: 50%;
       }
 
       * {
@@ -337,6 +339,58 @@
         background: #f0f0f0;
         color: #666;
       }
+
+      /* 鼠标光效 */
+      .cursor-effect {
+        position: fixed;
+        pointer-events: none;
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .cursor {
+        width: 8px;
+        height: 8px;
+        background: var(--primary);
+        border-radius: 50%;
+        position: fixed;
+        transition: width 0.2s, height 0.2s;
+      }
+
+      .cursor-follower {
+        width: 40px;
+        height: 40px;
+        background: rgba(24, 144, 255, 0.2);
+        border-radius: 50%;
+        position: fixed;
+        transition: 0.1s;
+      }
+
+      .glow {
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(
+          circle at center,
+          rgba(24, 144, 255, 0.15),
+          transparent 70%
+        );
+        position: fixed;
+        pointer-events: none;
+        transition: 0.15s ease;
+      }
+
+      /* 交互效果 */
+      .menu-item:hover ~ .cursor-effect .cursor {
+        transform: scale(1.5);
+        background: rgba(24, 144, 255, 0.6);
+      }
+
+      .menu-item:hover ~ .cursor-effect .cursor-follower {
+        transform: scale(1.2);
+        background: rgba(24, 144, 255, 0.3);
+      }
     </style>
   </head>
   <body>
@@ -548,6 +602,13 @@
         </div>
       </main>
     </div>
+
+    <div class="cursor-effect">
+      <div class="cursor"></div>
+      <div class="cursor-follower"></div>
+      <div class="glow"></div>
+    </div>
+
     <script>
       // 切换内容显示
       function showContent(sectionId) {
@@ -693,6 +754,73 @@
 
       // 页面加载时初始化设置
       document.addEventListener("DOMContentLoaded", loadSettings);
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+        const glow = document.querySelector('.glow');
+        let mouseX = 0;
+        let mouseY = 0;
+        let posX = 0;
+        let posY = 0;
+
+        function mouseCoords(e) {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+        }
+
+        function updateCursor() {
+          posX += (mouseX - posX) * 0.15;
+          posY += (mouseY - posY) * 0.15;
+
+          cursor.style.transform = `translate(${mouseX - 4}px, ${mouseY - 4}px)`;
+          cursorFollower.style.transform = `translate(${posX - 20}px, ${posY - 20}px)`;
+          glow.style.transform = `translate(${posX - 50}px, ${posY - 50}px)`;
+
+          requestAnimationFrame(updateCursor);
+        }
+
+        document.addEventListener('mousemove', mouseCoords);
+        updateCursor();
+
+        // 鼠标事件处理
+        document.addEventListener('mousedown', () => {
+          cursor.style.transform = 'scale(0.7)';
+          cursorFollower.style.transform = 'scale(0.7)';
+        });
+
+        document.addEventListener('mouseup', () => {
+          cursor.style.transform = 'scale(1)';
+          cursorFollower.style.transform = 'scale(1)';
+        });
+
+        document.addEventListener('mouseleave', () => {
+          cursor.style.opacity = '0';
+          cursorFollower.style.opacity = '0';
+          glow.style.opacity = '0';
+        });
+
+        document.addEventListener('mouseenter', () => {
+          cursor.style.opacity = '1';
+          cursorFollower.style.opacity = '1';
+          glow.style.opacity = '1';
+        });
+
+        // 优化性能
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+          item.addEventListener('mouseenter', () => {
+            cursor.style.transform = 'scale(1.5)';
+            cursorFollower.style.transform = 'scale(1.2)';
+          });
+
+          item.addEventListener('mouseleave', () => {
+            cursor.style.transform = 'scale(1)';
+            cursorFollower.style.transform = 'scale(1)';
+          });
+        });
+      });
     </script>
   </body>
 </html>

@@ -388,34 +388,62 @@
       async function login() {
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
-        const errorMessage = document.getElementById("errorMessage");
+        console.log("尝试登录:", username); // 调试日志
 
         try {
-          const jsonData = await readJsonFile("./json/login.json");
-          if (!jsonData) {
-            throw new Error("Failed to load login data");
-          }
+            console.log("开始读取 JSON 文件");
+            const response = await fetch("./json/login.json");
+            
+            if (!response.ok) {
+                console.error("HTTP错误:", response.status);
+                throw new Error(`HTTP错误! status: ${response.status}`);
+            }
 
-          const adminArray = jsonData.admins;
-          const admin = adminArray.find(
-            (a) => a.username === username && a.password === password
-          );
+            const jsonData = await response.json();
+            console.log("JSON数据:", jsonData); // 调试日志
 
-          if (admin) {
-            const expirationTime = Date.now() + 24 * 60 * 60 * 1000;
-            localStorage.setItem("isLoggedIn", "true");
-            localStorage.setItem("currentUser", username);
-            localStorage.setItem("loginExpiration", expirationTime);
-            localStorage.setItem("userType", "admin");
+            if (!jsonData.users || !Array.isArray(jsonData.users)) {
+                console.error("JSON格式错误:", jsonData);
+                throw new Error("登录数据格式错误");
+            }
 
-            window.location.href = "admin.html";
-          } else {
-            showError("用户名或密码错误");
-          }
+            const user = jsonData.users.find(
+                u => u.username === username && u.password === password
+            );
+            
+            console.log("用户验证结果:", !!user); // 调试日志
+
+            if (user) {
+                localStorage.setItem("isLoggedIn", "true");
+                localStorage.setItem("username", username);
+                window.location.href = "admin.html";
+            } else {
+                showError("用户名或密码错误");
+            }
         } catch (error) {
-          console.error("Error during login process:", error);
-          showError("系统错误，请稍后重试");
+            console.error("详细错误信息:", error);
+            
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                showError("无法读取登录信息，请检查网络连接");
+            } else if (error.message.includes('JSON')) {
+                showError("登录数据格式错误");
+            } else {
+                showError(`登录失败: ${error.message}`);
+            }
         }
+      }
+
+      // 显示错误信息的函数
+      function showError(message) {
+        const errorMessage = document.getElementById("errorMessage");
+        errorMessage.textContent = message;
+        errorMessage.style.display = "block";
+        errorMessage.classList.add("show");
+
+        setTimeout(() => {
+          errorMessage.classList.remove("show");
+          errorMessage.style.display = "none";
+        }, 3000);
       }
 
       function checkLoginExpiration() {
@@ -455,19 +483,6 @@
           event.preventDefault(); // 阻止表单默认提交
           await login(); // 调用登录函数
         });
-
-      // 显示错误信息
-      function showError(message) {
-        const errorMsg = document.getElementById("errorMessage");
-        errorMsg.style.display = "block"; // 显示错误信息
-        errorMsg.textContent = message;
-        errorMsg.classList.add("show");
-
-        setTimeout(() => {
-          errorMsg.classList.remove("show");
-          errorMsg.style.display = "none";
-        }, 3000);
-      }
 
       // 修改现有的鼠标移动监听代码
       document.addEventListener("mousemove", (e) => {
