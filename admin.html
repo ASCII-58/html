@@ -67,7 +67,7 @@
         gap: 12px;
         color: rgba(255, 255, 255, 0.85);
         position: relative;
-        overflow: hidden;
+        overflow: visible;
         z-index: 101;
       }
 
@@ -84,13 +84,72 @@
       }
 
       .menu-item svg {
-        width: 18px;
-        height: 18px;
+        width: 24px;
+        height: 24px;
         transition: transform 0.3s ease;
       }
 
-      .menu-item:hover svg {
+      .menu-item svg path {
+        stroke-width: 2;
+        stroke: currentColor;
+        stroke-dasharray: 300;
+        stroke-dashoffset: 300;
+        transition: stroke-dashoffset 0.6s ease;
+      }
+
+      .menu-item:hover svg path {
+        stroke-dashoffset: 0;
+      }
+
+      .menu-item::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border: 2px solid transparent;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+      }
+
+      .menu-item:hover::before {
+        border-color: var(--primary);
+      }
+
+      .menu-item img {
+        width: 24px;
+        height: 24px;
+        filter: brightness(0) invert(1);
+        transition: all 0.3s ease;
+      }
+
+      .menu-item:hover img {
         transform: scale(1.1);
+      }
+
+      .menu-item.active-menu-item img {
+        filter: brightness(0) invert(1);
+      }
+
+      @keyframes stroke {
+        100% {
+          stroke-dashoffset: 0;
+        }
+      }
+
+      .menu-item::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 6px;
+        background: transparent;
+        border: 2px solid transparent;
+        stroke-dasharray: 200;
+        stroke-dashoffset: 200;
+        transition: all 0.3s ease;
+      }
+
+      .menu-item:hover::after {
+        border-color: var(--primary);
+        animation: stroke 0.6s ease forwards;
       }
 
       .header {
@@ -353,67 +412,20 @@
             class="menu-item active-menu-item"
             onclick="showContent('dashboardContent')"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              style="width: 20px; height: 20px"
-            >
-              <path d="M12 2L2 22h20L12 2z" />
-            </svg>
+            <img src="img/ic_public_home.svg" alt="仪表盘" />
             仪表盘
           </div>
           <div class="menu-item" onclick="showContent('userContent')">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              style="width: 20px; height: 20px"
-            >
-              <path
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v5h-2zm-1 8h4v-2h-4z"
-              />
-            </svg>
+            <img src="img/ic_public_contacts_group.svg" alt="用户管理" />
             用户管理
           </div>
           <div class="menu-item" onclick="showContent('partsContent')">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              style="width: 20px; height: 20px"
-            >
-              <path
-                d="M19 3H5c-1.11 0-2 .89-2 2v14c0 1.11.89 2 2 2h14c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 16H5V5h14v14zM7 11v2h2v-2H7zm4 0v2h2v-2h-2zm4 0v2h2v-2h-2z"
-              />
-            </svg>
+            <img src="img/ic_public_view_grid.svg" alt="配件管理" />
             配件管理
           </div>
           <div class="menu-item" onclick="showContent('ordersContent')">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              style="width: 20px; height: 20px"
-            >
-              <path
-                d="M19 3H5c-1.11 0-2 .89-2 2v14c0 1.11.89 2 2 2h14c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 16H5V5h14v14zM7 11v2h2v-2H7zm4 0v2h2v-2h-2zm4 0v2h2v-2h-2z"
-              />
-            </svg>
+            <img src="img/ic_public_timer.svg" alt="订单管理" />
             订单管理
-          </div>
-          <div class="menu-item" onclick="showContent('settingsContent')">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              style="width: 20px; height: 20px"
-            >
-              <path
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v5h-2zm-1 8h4v-2h-4z"
-              />
-            </svg>
-            系统设置
           </div>
         </div>
       </aside>
@@ -474,84 +486,10 @@
           <div id="ordersContent" class="content-section">
             <h1>订单管理区域</h1>
           </div>
-          <div id="settingsContent" class="content-section">
-            <h2 class="section-title">系统设置</h2>
-
-            <div class="settings-container">
-              <!-- 基础设置 -->
-              <div class="settings-group">
-                <h3>基础设置</h3>
-                <div class="setting-item">
-                  <label>系统名称</label>
-                  <input type="text" id="systemName" class="setting-input" />
-                </div>
-                <div class="setting-item">
-                  <label>系统版本</label>
-                  <input
-                    type="text"
-                    id="systemVersion"
-                    class="setting-input"
-                    readonly
-                  />
-                </div>
-              </div>
-
-              <!-- 主题设置 -->
-              <div class="settings-group">
-                <h3>主题设置</h3>
-                <div class="setting-item">
-                  <label>主题色</label>
-                  <input type="color" id="primaryColor" class="setting-input" />
-                </div>
-                <div class="setting-item">
-                  <label>侧边栏颜色</label>
-                  <input type="color" id="sidebarColor" class="setting-input" />
-                </div>
-              </div>
-
-              <!-- 安全设置 -->
-              <div class="settings-group">
-                <h3>安全设置</h3>
-                <div class="setting-item">
-                  <label>最小密码长度</label>
-                  <input
-                    type="number"
-                    id="passwordMinLength"
-                    class="setting-input"
-                  />
-                </div>
-                <div class="setting-item">
-                  <label>登录尝试次数</label>
-                  <input
-                    type="number"
-                    id="loginAttempts"
-                    class="setting-input"
-                  />
-                </div>
-                <div class="setting-item">
-                  <label>锁定时长(分钟)</label>
-                  <input
-                    type="number"
-                    id="lockDuration"
-                    class="setting-input"
-                  />
-                </div>
-              </div>
-
-              <div class="settings-actions">
-                <button onclick="saveSettings()" class="save-btn">
-                  保存设置
-                </button>
-                <button onclick="resetSettings()" class="reset-btn">
-                  重置默认
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
       </main>
     </div>
-    <div >
+    <div>
       <!--新建div，样式为高斯模糊20px-->
       <div
         style="
@@ -575,23 +513,25 @@
         let cursor;
         let mouseX = 0;
         let mouseY = 0;
-        
-        document.addEventListener('DOMContentLoaded', () => {
-          cursor = document.querySelector('.cursor-effect');
-          
-          document.addEventListener('mousemove', (e) => {
+
+        document.addEventListener("DOMContentLoaded", () => {
+          cursor = document.querySelector(".cursor-effect");
+
+          document.addEventListener("mousemove", (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
           });
-        
+
           requestAnimationFrame(updateCursor);
         });
-        
+
         function updateCursor() {
-          document.getElementById("cursor").style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+          document.getElementById(
+            "cursor"
+          ).style.transform = `translate(${mouseX}px, ${mouseY}px)`;
           requestAnimationFrame(updateCursor);
         }
-        </script>
+      </script>
     </div>
     <script>
       // 切换内容显示
@@ -634,110 +574,6 @@
         localStorage.clear();
         window.location.href = "login.html";
       }
-    </script>
-    <script>
-      // 修改 loadSettings 函数
-      async function loadSettings() {
-        try {
-          // 先尝试从 localStorage 获取设置
-          const savedSettings = localStorage.getItem("systemSettings");
-          let settings;
-
-          if (savedSettings) {
-            settings = JSON.parse(savedSettings);
-          } else {
-            // 如果没有保存的设置，从配置文件加载默认值
-            const response = await fetch("./json/setting.json");
-            settings = await response.json();
-            // 保存默认设置到 localStorage
-            localStorage.setItem("systemSettings", JSON.stringify(settings));
-          }
-
-          // 填充表单
-          document.getElementById("systemName").value = settings.system.name;
-          document.getElementById("systemVersion").value =
-            settings.system.version;
-          document.getElementById("primaryColor").value =
-            settings.system.theme.primary;
-          document.getElementById("sidebarColor").value =
-            settings.system.theme.sidebar;
-          document.getElementById("passwordMinLength").value =
-            settings.system.security.passwordMinLength;
-          document.getElementById("loginAttempts").value =
-            settings.system.security.loginAttempts;
-          document.getElementById("lockDuration").value =
-            settings.system.security.lockDuration;
-
-          // 应用主题设置
-          document.documentElement.style.setProperty(
-            "--primary",
-            settings.system.theme.primary
-          );
-          document.documentElement.style.setProperty(
-            "--sidebar",
-            settings.system.theme.sidebar
-          );
-        } catch (error) {
-          console.error("加载设置失败:", error);
-        }
-      }
-
-      // 替换原有的saveSettings函数
-      async function saveSettings() {
-        try {
-          const settings = {
-            system: {
-              name: document.getElementById("systemName").value,
-              version: document.getElementById("systemVersion").value,
-              theme: {
-                primary: document.getElementById("primaryColor").value,
-                sidebar: document.getElementById("sidebarColor").value,
-              },
-              security: {
-                passwordMinLength: parseInt(
-                  document.getElementById("passwordMinLength").value
-                ),
-                loginAttempts: parseInt(
-                  document.getElementById("loginAttempts").value
-                ),
-                lockDuration: parseInt(
-                  document.getElementById("lockDuration").value
-                ),
-              },
-            },
-          };
-
-          // 使用 localStorage 存储设置
-          localStorage.setItem("systemSettings", JSON.stringify(settings));
-
-          // 更新主题颜色
-          document.documentElement.style.setProperty(
-            "--primary",
-            settings.system.theme.primary
-          );
-          document.documentElement.style.setProperty(
-            "--sidebar",
-            settings.system.theme.sidebar
-          );
-
-          alert("设置保存成功");
-        } catch (error) {
-          console.error("保存设置失败:", error);
-          alert("保存设置失败");
-        }
-      }
-
-      // 添加重置设置功能
-      async function resetSettings() {
-        if (confirm("确定要重置所有设置吗？")) {
-          localStorage.removeItem("systemSettings");
-          await loadSettings();
-          alert("设置已重置为默认值");
-        }
-      }
-
-      // 页面加载时初始化设置
-      document.addEventListener("DOMContentLoaded", loadSettings);
     </script>
   </body>
 </html>
