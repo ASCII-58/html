@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
-    <link rel="stylesheet" href="./admin.html">
-    <link rel="stylesheet" href="./json/login.json">
+    
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>登录系统</title>
@@ -520,7 +519,7 @@
           localStorage.setItem("isLoggedIn", "true");
           localStorage.setItem("expireTime", Date.now() + 24 * 60 * 60 * 1000);
           // 登录成功，重定向到主页
-          window.location.href = "./index.html";
+          window.location.href = "./admin.html";
           return;
         } else {
           // 登录失败，显示错误消息
@@ -573,7 +572,7 @@
         const newPassword = document.getElementById("newPassword").value;
 
         try {
-          const response = await fetch("/json/login.json");
+          const response = await fetch("./json/login.json");
           const data = await response.json();
           // 验证安全验证码
           if (md5(securityText) !== data.securityText) {
