@@ -1,0 +1,13 @@
+{
+  "orders": [
+    {
+      "id": "O001",
+      "userId": "U001",
+      "partId": "P001",
+      "quantity": 1,
+      "totalPrice": 999.99,
+      "status": "pending",
+      "createTime": "2024-01-01"
+    }
+  ]
+}

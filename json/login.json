@@ -1,8 +1,6 @@
 {
-  "users": [
-    {
-      "username": "admin",
-      "password": "123456"
-    }
-  ]
+  "username": "admin",
+  "password": "123456",
+  "type": "admin",
+  "securityText": "e10adc3949ba59abbe56e057f20f883e"
 }

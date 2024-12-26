@@ -1,0 +1,13 @@
+{
+  "users": [
+    {
+      "id": "U001",
+      "username": "admin",
+      "password": "123456", 
+      "phone": "13800138000",
+      "role": "admin",
+      "status": "active",
+      "createTime": "2024-01-01"
+    }
+  ]
+}

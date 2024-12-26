@@ -1,0 +1,13 @@
+{
+  "parts": [
+    {
+      "id": "P001",
+      "name": "CPU",  
+      "price": 999.99,
+      "stock": 50,
+      "category": "处理器",
+      "status": "active",
+      "createTime": "2024-01-01"
+    }
+  ]
+}
