@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
-    
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>登录管理员账号</title>
+    <title>用户登录界面</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
     <script>
       function md5(string) {
@@ -188,14 +187,31 @@
         transition: all 0.3s ease;
         cursor: pointer;
         position: absolute;
-        
-        bottom: 5%;
+        left: 10%;
+        bottom: 10px;
       }
 
       .forgot-link:hover {
         color: #60a5fa;
         text-decoration: underline;
       }
+      .admin-link{
+        color: var(--primary-color);
+        font-size: 0.9rem;
+        text-align: right;
+        margin-top: 1rem;
+        display: block;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: absolute;
+        right: 10%;
+        bottom: 10px;
+      }
+      .admin-link:hover{
+        color: #60a5fa;
+        text-decoration: underline;
+      }
+
       .modal {
         display: none;
         position: fixed;
@@ -345,6 +361,7 @@
           font-size: 1.75rem;
         }
       }
+      /* 优化 logo 样式 */
       .logo {
         display: block;
         margin: 0 auto 1rem;
@@ -383,7 +400,7 @@
       }
 
       input {
-        width: 100%;
+        width: 80%;
         padding: 0.8rem;
         border: 1px solid var(--border);
         border-radius: 4px;
@@ -397,7 +414,7 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
         padding: 12px;
         border-radius: 8px;
-        width: 100%;
+        width: 80%;
         margin-bottom: 1rem;
         transition: all 0.3s ease;
       }
@@ -409,10 +426,10 @@
     </style>
   </head>
   <body>
-    
+    <!-- 添加 logo 图片 -->
     <div class="container">
       <img src="img/xy.ico" alt="Logo" class="logo" />
-      <h2>管理员登录</h2>
+      <h2>登录</h2>
       <form id="loginForm" onsubmit="return login(event)">
         <div class="form-group">
           <label>用户名</label>
@@ -425,6 +442,7 @@
         <div id="error" class="error-message"></div>
         <button type="submit">登录</button>
         <a class="forgot-link" onclick="showResetModal()">忘记密码？</a>
+        <a class="admin-link" href="./login.html">管理员登录</a>
       </form>
     </div>
 
@@ -505,7 +523,8 @@
         if (!response.ok) {
           throw new Error("网络错误");
         }
-        return response.json();
+        const jsonData = await response.json();
+        return jsonData.user;
       }
       // 添加加载状态显示
       async function login(event) {
@@ -518,15 +537,25 @@
         button.classList.add("loading");
         button.disabled = true;
         // 读取 JSON 文件
-        const data = await readJsonFile("./json/login.json");
-        if (data.username === username && md5(password) === data.password) {
+        const data = await readJsonFile("./json/user.json");
+        // 验证用户名和密码
+        const user = data.find((u) => u.username === username);
+        if (!user) {
+          // 登录失败，显示错误消息
+          showError("用户名或密码错误");
+          // 移除加载状态
+          button.classList.remove("loading");
+          button.disabled = false;
+          return;
+        }
+        if (user.username === username && md5(password) === user.password) {
           // 将用户名和密码存储到localStorage中，24小时后过期
-          localStorage.setItem("userType", "admin");
+          localStorage.setItem("userType", "user");
           localStorage.setItem("currentUser", username);
           localStorage.setItem("isLoggedIn", "true");
           localStorage.setItem("expireTime", Date.now() + 24 * 60 * 60 * 1000);
           // 登录成功，重定向到主页
-          window.location.href = "./admin.html";
+          window.location.href = "./ui.html";
           return;
         } else {
           // 登录失败，显示错误消息
@@ -579,7 +608,7 @@
         const newPassword = document.getElementById("newPassword").value;
 
         try {
-          const response = await fetch("./json/login.json");
+          const response = await fetch("./json/user.json");
           const data = await response.json();
           // 验证安全验证码
           if (md5(securityText) !== data.securityText) {
@@ -590,7 +619,7 @@
           data.username = newUsername;
           data.password = md5(newPassword);
           // 保存修改后的 JSON 文件
-          await fetch("./json/login.json", {
+          await fetch("./json/user.json", {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",

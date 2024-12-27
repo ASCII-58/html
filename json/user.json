@@ -1,13 +1,18 @@
 {
-  "users": [
+  "user": [
     {
       "id": "U001",
-      "username": "admin",
-      "password": "123456", 
+      "username": "user1",
+      "password": "e10adc3949ba59abbe56e057f20f883e",
       "phone": "13800138000",
-      "role": "admin",
-      "status": "active",
       "createTime": "2024-01-01"
+    },
+    {
+      "id": "U002",
+      "username": "user2",
+      "password": "123456",
+      "phone": "13800138001",
+      "createTime": "2024-01-02"
     }
   ]
 }
