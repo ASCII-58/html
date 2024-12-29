@@ -1,10 +1,156 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-    <head>
-        <meta charset="UTF-8">
-        <title>用户界面</title>
-    </head>
-    <body>
-        
-    </body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>用户界面</title>
+    <link rel="shortcut icon" href="./img/xy.ico" type="image/x-icon">
+    <style>
+      :root {
+        --primary-color: #002981;
+        --text-primary: #333;
+        --text-secondary: #666;
+      }
+      header {
+        background: white;
+        height: 64px;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+        z-index: 1000;
+      }
+      .loading {
+        position: fixed;
+        height: 100vh;
+        width: 100vw;
+        z-index: 99999;
+        background: linear-gradient(135deg, #1a1b1f 0%, #2d3436 100%);
+      }
+      footer {
+        background-color: var(--primary-color);
+        color: #fff;
+        text-align: center;
+        padding: 10px 0;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+      }
+      footer p {
+        margin: 0 0 0 0;
+      }
+      footer div {
+        border: none;
+        margin: 0 0 0 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="loading">
+      <!--img显示div中心-->
+      <img
+        src="img/loading.b8beb09c.gif"
+        alt="loading"
+        style="
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        "
+      />
+    </div>
+    <header class="header">
+      <div class="user-info">
+        <span id="userName"></span>
+        <button class="logout-btn" onclick="logout()">退出登录</button>
+      </div>
+      <script>
+        // 检查登录状态和权限
+        window.onload = function () {
+          const userType = localStorage.getItem("Type");
+          const isLoggedIn = localStorage.getItem("isLoggedIn");
+          const currentUser = localStorage.getItem("User");
+          // 判断type是否为undefined
+          if (!userType) {
+            window.location.href = "user.html";
+          } else {
+            if (!isLoggedIn || userType !== "user") {
+              window.location.href = "uaer.html";
+              return;
+            } else {
+              document.querySelector(".loading").style.display = "none";
+            }
+          }
+
+          // 显示管理员名称
+          document.getElementById("userName").textContent = currentUser;
+        };
+
+        // 退出登录
+        function logout() {
+          localStorage.clear();
+          window.location.href = "user.html";
+        }
+      </script>
+    </header>
+    <div>
+      <div
+        style="
+          filter: blur(50px);
+          position: fixed;
+          height: 70px;
+          width: 70px;
+          z-index: 100;
+          background-color: #bbeeff;
+          pointer-events: none;
+          transition: 0.05s;
+          border-radius: 50%;
+          left: -25px;
+          top: -25px;
+          will-change: transform;
+        "
+        id="cursor"
+      ></div>
+
+      <script>
+        let cursor;
+        let mouseX = 0;
+        let mouseY = 0;
+
+        document.addEventListener("DOMContentLoaded", () => {
+          cursor = document.querySelector(".cursor-effect");
+
+          document.addEventListener("mousemove", (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+          });
+
+          requestAnimationFrame(updateCursor);
+        });
+
+        function updateCursor() {
+          document.getElementById(
+            "cursor"
+          ).style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+          requestAnimationFrame(updateCursor);
+        }
+      </script>
+    </div>
+    <footer>
+      <p>
+        版权所有 &copy; 路安汽配 配件管理系统 |
+        <a href="#" style="color: rgb(255, 255, 255)">隐私政策</a>
+      </p>
+      <!--为div注册点击事件-->
+      <div onclick="window.open('https://beian.mps.gov.cn/#/query/webSearch')">
+        <img
+          data-v-4fe9a924=""
+          src="./img/netsafe.png"
+          style="height: 20px; width: 20px"
+          alt="Netsafe Logo"
+        />
+        冀ICP备2024096973号-1
+      </div>
+    </footer>
+  </body>
 </html>

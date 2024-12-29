@@ -15,17 +15,13 @@
         --cursor-x: 50%;
         --cursor-y: 50%;
       }
-.loading{
-  position: fixed;
-  height: 100vh;
-  width: 100vw;
-  z-index: 99999;
-  background: linear-gradient(
-        135deg,
-        #1a1b1f 0%,
-        #2d3436 100%
-    );
-}
+      .loading {
+        position: fixed;
+        height: 100vh;
+        width: 100vw;
+        z-index: 99999;
+        background: linear-gradient(135deg, #1a1b1f 0%, #2d3436 100%);
+      }
       * {
         margin: 0;
         padding: 0;
@@ -112,7 +108,7 @@
       }
 
       .menu-item::before {
-        content: '';
+        content: "";
         position: absolute;
         inset: 0;
         border: 2px solid transparent;
@@ -146,7 +142,7 @@
       }
 
       .menu-item::after {
-        content: '';
+        content: "";
         position: absolute;
         inset: 0;
         border-radius: 6px;
@@ -413,8 +409,17 @@
   </head>
   <body>
     <div class="loading">
-    <!--img显示div中心-->
-    <img src="img/loading.b8beb09c.gif" alt="loading" style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);" />
+      <!--img显示div中心-->
+      <img
+        src="img/loading.b8beb09c.gif"
+        alt="loading"
+        style="
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        "
+      />
     </div>
     <div class="container">
       <aside class="sidebar">
@@ -574,7 +579,7 @@
         if (!isLoggedIn || userType !== "admin") {
           window.location.href = "login.html";
           return;
-        }else{
+        } else {
           document.querySelector(".loading").style.display = "none";
         }
 

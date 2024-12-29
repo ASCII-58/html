@@ -550,8 +550,8 @@
         }
         if (user.username === username && md5(password) === user.password) {
           // 将用户名和密码存储到localStorage中，24小时后过期
-          localStorage.setItem("userType", "user");
-          localStorage.setItem("currentUser", username);
+          localStorage.setItem("Type", "user");
+          localStorage.setItem("User", username);
           localStorage.setItem("isLoggedIn", "true");
           localStorage.setItem("expireTime", Date.now() + 24 * 60 * 60 * 1000);
           // 登录成功，重定向到主页
