@@ -369,16 +369,25 @@
         height: auto;
       }
       /* 优化页脚布局 */
-      footer {
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        text-align: center;
-        padding: 1rem;
+      
+      footer {padding: 1rem;
+        background-color: var(--primary-color);
         color: var(--text-secondary);
         font-size: 0.9rem;
         background: rgba(0, 0, 0, 0.2);
         backdrop-filter: blur(10px);
+        text-align: center;
+        padding: 10px 0;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+      }
+      footer p {
+        margin: 0 0 0 0;
+      }
+      footer div {
+        border: none;
+        margin: 0 0 0 0;
       }
 
       #loginForm {
@@ -648,17 +657,16 @@
       }
     </script>
     <footer>
-      <p>
-        版权所有 &copy; 2024 配件管理系统 |
-        <a href="#" style="color: var(--text-secondary)">隐私政策</a>
+      <p style="font-size: 12px;">
+        版权所有 &copy; 路安汽配 配件管理系统 |
+        <a href="#" style="color: rgb(255, 255, 255)">隐私政策</a>
       </p>
       <!--为div注册点击事件-->
-      <div onclick="window.open('https://beian.mps.gov.cn/#/query/webSearch')">
-        <!--备案号:冀ICP备2024096973号-->
+      <div style="font-size: 12px;" onclick="window.open('https://beian.mps.gov.cn/#/query/webSearch')">
         <img
           data-v-4fe9a924=""
           src="./img/netsafe.png"
-          style="height: 20px;width: 20px;"
+          style="height: 8px; width: 8px"
           alt="Netsafe Logo"
         />
         冀ICP备2024096973号-1

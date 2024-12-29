@@ -405,6 +405,23 @@
         background: #f0f0f0;
         color: #666;
       }
+      footer {
+        background-color: var(--sidebar);
+        color: #fff;
+        text-align: center;
+        padding: 10px 0;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        z-index: 1000;
+      }
+      footer p {
+        margin: 0 0 0 0;
+      }
+      footer div {
+        border: none;
+        margin: 0 0 0 0;
+      }
     </style>
   </head>
   <body>
@@ -596,5 +613,24 @@
         window.location.href = "login.html";
       }
     </script>
+    <footer>
+      <p style="font-size: 12px">
+        版权所有 &copy; 路安汽配 配件管理系统 |
+        <a href="#" style="color: rgb(255, 255, 255)">隐私政策</a>
+      </p>
+      <!--为div注册点击事件-->
+      <div
+        style="font-size: 12px"
+        onclick="window.open('https://beian.mps.gov.cn/#/query/webSearch')"
+      >
+        <img
+          data-v-4fe9a924=""
+          src="./img/netsafe.png"
+          style="height: 8px; width: 8px"
+          alt="Netsafe Logo"
+        />
+        冀ICP备2024096973号-1
+      </div>
+    </footer>
   </body>
 </html>

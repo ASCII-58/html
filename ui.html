@@ -44,7 +44,7 @@
         color: #fff;
         text-align: center;
         padding: 10px 0;
-        position: fixed;
+        position: absolute;
         bottom: 0;
         width: 100%;
       }
@@ -57,7 +57,7 @@
       }
     </style>
   </head>
-  <body>
+  <body style="height: auto;position: relative;">
     <div class="loading">
       <!--img显示div中心-->
       <img
@@ -173,16 +173,16 @@
       </script>
     </div>
     <footer>
-      <p>
+      <p style="font-size: 12px;">
         版权所有 &copy; 路安汽配 配件管理系统 |
         <a href="#" style="color: rgb(255, 255, 255)">隐私政策</a>
       </p>
       <!--为div注册点击事件-->
-      <div onclick="window.open('https://beian.mps.gov.cn/#/query/webSearch')">
+      <div style="font-size: 12px;" onclick="window.open('https://beian.mps.gov.cn/#/query/webSearch')">
         <img
           data-v-4fe9a924=""
           src="./img/netsafe.png"
-          style="height: 20px; width: 20px"
+          style="height: 8px; width: 8px"
           alt="Netsafe Logo"
         />
         冀ICP备2024096973号-1
