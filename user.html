@@ -2,381 +2,46 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>用户界面</title>
     <link rel="shortcut icon" href="./img/xy.ico" type="image/x-icon" />
-    <title>用户登录界面</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
-    <script>
-      function md5(string) {
-        return CryptoJS.MD5(string).toString();
-      }
-    </script>
     <style>
       :root {
-        --primary-color: #4a90e2;
-        --secondary-color: #2c3e50;
-        --success-color: #27ae60;
-        --error-color: #e74c3c;
-        --background: #1a1b1f;
-        --card-bg: #22252c;
-        --text-primary: #ffffff;
-        --text-secondary: #a0a0a0;
+        --primary-color: #002981;
+        --text-primary: #333;
+        --text-secondary: #666;
       }
-
-      body {
-        min-height: 100vh;
-        margin: 0;
+      header {
+        background: white;
+        height: 64px;
+        padding: 0 20px;
         display: flex;
-        flex-direction: column;
-        justify-content: center;
         align-items: center;
-        background: linear-gradient(45deg, #1a1b1f, #2d3436);
-        position: relative;
-        overflow: hidden;
-      }
-
-      body::before,
-      body::after {
-        content: "";
-        position: absolute;
-        width: 300px;
-        height: 300px;
-        border-radius: 50%;
-        filter: blur(100px);
-        opacity: 0.2;
-        animation: float 10s infinite ease-in-out;
-      }
-
-      body::before {
-        background: var(--primary-color);
-        top: -100px;
-        left: -100px;
-        animation-delay: -5s;
-      }
-
-      body::after {
-        background: #60a5fa;
-        bottom: -100px;
-        right: -100px;
-      }
-
-      @keyframes float {
-        0%,
-        100% {
-          transform: translate(0, 0);
-        }
-        50% {
-          transform: translate(30px, 30px);
-        }
-      }
-
-      .container {
-        background: var(--card-bg);
-        padding: 2rem;
-        border-radius: 16px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        transform: translateY(0);
-        transition: all 0.3s ease;
-        max-width: 420px;
-        min-width: 300px;
-        margin: 2rem;
-        width: 60%;
-        position: relative;
-        z-index: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        min-height: 400px;
-        height: 80vw;
-        max-height: 522px;
-      }
-
-      .container:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-      }
-
-      h2 {
-        font-size: 2rem;
-        margin-bottom: 2rem;
-        text-align: center;
-        font-weight: 600;
-        background: linear-gradient(45deg, var(--primary-color), #60a5fa);
-        background-clip: text;
-        -webkit-background-clip: text; /* 兼容 WebKit 浏览器 */
-        color: transparent;
-        margin: 0 0 0 0;
-      }
-
-      .form-group {
-        margin-bottom: 1.5rem;
-        position: relative;
-        width: 100%;
-        max-width: 320px;
-      }
-
-      .form-group label {
-        font-size: 0.9rem;
-        color: var(--text-secondary);
-        margin-bottom: 0.8rem;
-        display: block;
-        transition: all 0.3s ease;
-        font-weight: 500;
-      }
-
-      .form-group input {
-        width: 80%;
-        padding: 0.8rem;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-        color: var(--text-primary);
-        font-size: 1rem;
-        transition: all 0.3s ease;
-        height: 3rem;
-        padding: 0 1rem;
-      }
-
-      .form-group input:focus {
-        outline: none;
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
-      }
-
-      .form-group input:focus + label {
-        color: var(--primary-color);
-      }
-
-      button {
-        width: 100%;
-        padding: 1rem;
-        border: none;
-        border-radius: 8px;
-        background: linear-gradient(45deg, var(--primary-color), #60a5fa);
-        color: white;
-        font-size: 1rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-        height: 3.2rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: 600;
-        margin-top: 1rem;
-      }
-
-      button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
-      }
-
-      button:active {
-        transform: translateY(1px);
-      }
-
-      .forgot-link {
-        color: var(--primary-color);
-        font-size: 0.9rem;
-        text-align: right;
-        margin-top: 1rem;
-        display: block;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        position: absolute;
-        left: 10%;
-        bottom: 10px;
-      }
-
-      .forgot-link:hover {
-        color: #60a5fa;
-        text-decoration: underline;
-      }
-      .admin-link {
-        color: var(--primary-color);
-        font-size: 0.9rem;
-        text-align: right;
-        margin-top: 1rem;
-        display: block;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        position: absolute;
-        right: 10%;
-        bottom: 10px;
-      }
-      .admin-link:hover {
-        color: #60a5fa;
-        text-decoration: underline;
-      }
-
-      .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.7);
-        backdrop-filter: blur(12px);
-        z-index: 1000;
-        opacity: 0;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-
-      .modal.active {
-        opacity: 1;
-      }
-
-      .modal-content {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(0.9);
-        background: linear-gradient(145deg, #1a1f25, #161b22);
-        padding: 2.5rem;
-        border-radius: 20px;
-        min-width: 360px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-
-      .modal.active .modal-content {
-        transform: translate(-50%, -50%) scale(1);
-      }
-
-      .modal-header {
-        display: flex;
         justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5rem;
-      }
-
-      .modal-header h3 {
-        font-size: 1.5rem;
-        background: linear-gradient(45deg, var(--primary-color), #60a5fa);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-      }
-
-      .close-btn {
-        background: transparent;
-        border: none;
-        color: var(--text);
-        font-size: 1.5rem;
-        cursor: pointer;
-        padding: 0.5rem;
-        border-radius: 50%;
-        width: 36px;
-        height: 36px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s ease;
-      }
-
-      .close-btn:hover {
-        background: rgba(255, 255, 255, 0.1);
-        transform: rotate(90deg);
-      }
-
-      .modal-footer {
-        display: flex;
-        gap: 1rem;
-        margin-top: 2rem;
-      }
-
-      .modal-footer button {
-        flex: 1;
-      }
-
-      .btn-cancel {
-        background: rgba(255, 255, 255, 0.1);
-      }
-
-      .btn-cancel:hover {
-        background: rgba(255, 255, 255, 0.2);
-      }
-
-      .error-message {
-        background: rgba(231, 76, 60, 0.1);
-        color: var(--error-color);
-        padding: 0.75rem;
-        border-radius: 6px;
-        font-size: 0.9rem;
-        margin-top: 0.5rem;
-        display: none;
-      }
-
-      /* 添加动画效果 */
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .container {
-        animation: fadeIn 0.5s ease forwards;
-      }
-
-      /* 添加加载动画 */
-      .loading {
+        box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
         position: relative;
+        z-index: 1000;
       }
-
-      .loading::after {
-        content: "";
+      .user-info {
+        align-items: center;
         position: absolute;
-        width: 20px;
-        height: 20px;
-        border: 2px solid transparent;
-        border-top-color: #fff;
-        border-radius: 50%;
-        animation: spin 0.8s linear infinite;
-      }
-
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-
-      /* 响应式优化 */
-      @media (max-width: 480px) {
-        .container {
-          margin: 1rem;
-          padding: 1.5rem;
-        }
-
-        h2 {
-          font-size: 1.75rem;
-        }
-      }
-      /* 优化 logo 样式 */
-      .logo {
+        width: 120px;
+        height: 50px;
+        right: 20px;
+        border-radius: 6px;
         display: block;
-        margin: 0 auto 1rem;
-        width: 20%; /* 调整大小 */
-        height: auto;
+        right: 0;
+        background-color: #bbeeff;
       }
-      /* 优化页脚布局 */
-
+      .loading {
+        position: fixed;
+        height: 100vh;
+        width: 100vw;
+        z-index: 99999;
+        background: linear-gradient(135deg, #1a1b1f 0%, #2d3436 100%);
+      }
       footer {
-        padding: 1rem;
         background-color: var(--primary-color);
-        color: var(--text-secondary);
-        font-size: 0.9rem;
-        background: rgba(0, 0, 0, 0.2);
-        backdrop-filter: blur(10px);
+        color: #fff;
         text-align: center;
         padding: 10px 0;
         position: absolute;
@@ -390,99 +55,83 @@
         border: none;
         margin: 0 0 0 0;
       }
-
-      #loginForm {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-
-      button[type="submit"] {
-        width: 320px;
-        padding: 0.8rem;
-        background: var(--primary);
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-      }
-
-      input {
-        width: 80%;
-        padding: 0.8rem;
-        border: 1px solid var(--border);
-        border-radius: 4px;
-        background: rgba(255, 255, 255, 0.05);
-        color: var(--text);
-        transition: all 0.3s ease;
-      }
-
-      .modal input {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 12px;
-        border-radius: 8px;
-        width: 80%;
-        margin-bottom: 1rem;
-        transition: all 0.3s ease;
-      }
-
-      .modal input:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
-      }
     </style>
   </head>
-  <body>
-    <!-- 添加 logo 图片 -->
-    <div class="container">
-      <img src="img/xy.ico" alt="Logo" class="logo" />
-      <h2>登录</h2>
-      <form id="loginForm" onsubmit="return login(event)">
-        <div class="form-group">
-          <label>用户名</label>
-          <input type="text" id="username" required />
-        </div>
-        <div class="form-group">
-          <label>密码</label>
-          <input type="password" id="password" required />
-        </div>
-        <div id="error" class="error-message"></div>
-        <button type="submit">登录</button>
-        <a class="forgot-link" onclick="showResetModal()">忘记密码？</a>
-        <a class="admin-link" href="./login.html">管理员登录</a>
-      </form>
+  <body style="height: auto;position: relative;"><div style="position: fixed;width: 100vw;height: 100vh;z-index: 1000000;background-color: #ffffff;text-align: center;font-size: 100px;">未完成</div>
+    
+    <div class="loading">
+      <!--img显示div中心-->
+      <img
+        src="img/loading.b8beb09c.gif"
+        alt="loading"
+        style="
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        "
+      />
     </div>
-
-    <div id="resetModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>重置密码</h3>
-          <button class="close-btn" onclick="closeResetModal()">&times;</button>
-        </div>
-        <div class="form-group">
-          <label>安全验证码</label>
-          <input type="text" id="securityText" required />
-        </div>
-        <div class="form-group">
-          <label>新用户名</label>
-          <input type="text" id="newUsername" required />
-        </div>
-        <div class="form-group">
-          <label>新密码</label>
-          <input type="password" id="newPassword" required />
-        </div>
-        <div id="resetError" class="error-message"></div>
-        <div class="modal-footer">
-          <button onclick="resetPassword()" class="btn-reset">重置密码</button>
-          <button onclick="closeResetModal()" class="btn-cancel">取消</button>
-        </div>
+    <header class="header">
+      <div class="user-info">
+        <span
+          id="userName"
+          style="
+            text-align: center;
+            width: 116px;
+            display: block;
+            overflow: hidden;
+          "
+        ></span>
+        <button
+          style="
+            display: block;
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+            background-color: #00bfff;
+            margin: 0 0 0 0;
+            border: none;
+            width: 114px;
+            position: absolute;
+            bottom: 3px;
+            left: 3px;
+          "
+          onclick="logout()"
+        >
+          退出登录
+        </button>
       </div>
-    </div>
+      <script>
+        // 检查登录状态和权限
+        window.onload = function () {
+          const userType = localStorage.getItem("Type");
+          const isLoggedIn = localStorage.getItem("isLoggedIn");
+          const currentUser = localStorage.getItem("User");
+          // 判断type是否为undefined
+          if (!userType) {
+            window.location.href = "userLogin.html";
+          } else {
+            if (!isLoggedIn || userType !== "user") {
+              window.location.href = "uaerLogin.html";
+              return;
+            } else {
+              document.querySelector(".loading").style.display = "none";
+            }
+          }
+
+          // 显示管理员名称
+          document.getElementById("userName").textContent = currentUser;
+        };
+
+        // 退出登录
+        function logout() {
+          localStorage.clear();
+          window.location.href = "userLogin.html";
+        }
+      </script>
+    </header>
+    <div style="height: 64px;"></div>
     <div>
-      <!--新建div，样式为高斯模糊20px-->
       <div
         style="
           filter: blur(50px);
@@ -490,7 +139,7 @@
           height: 70px;
           width: 70px;
           z-index: 100;
-          background-color: #56d5ff;
+          background-color: #bbeeff;
           pointer-events: none;
           transition: 0.05s;
           border-radius: 50%;
@@ -525,148 +174,13 @@
         }
       </script>
     </div>
-
-    <script>
-      // 构造异步函数读取json文件中的某个对象
-      async function readJsonFile(filePath) {
-        const response = await fetch(filePath);
-        if (!response.ok) {
-          throw new Error("网络错误");
-        }
-        const jsonData = await response.json();
-        return jsonData.user;
-      }
-      // 添加加载状态显示
-      async function login(event) {
-        event.preventDefault();
-        // 获取表单数据
-        const username = document.getElementById("username").value.trim();
-        const password = document.getElementById("password").value.trim();
-        // 获取登录按钮并添加加载状态
-        const button = document.querySelector('button[type="submit"]');
-        button.classList.add("loading");
-        button.disabled = true;
-        // 读取 JSON 文件
-        const data = await readJsonFile("./json/user.json");
-        // 验证用户名和密码
-        const user = data.find((u) => u.username === username);
-        if (!user) {
-          // 登录失败，显示错误消息
-          showError("用户名或密码错误");
-          // 移除加载状态
-          button.classList.remove("loading");
-          button.disabled = false;
-          return;
-        }
-        if (user.username === username && md5(password) === user.password) {
-          // 将用户名和密码存储到localStorage中，24小时后过期
-          localStorage.setItem("Type", "user");
-          localStorage.setItem("User", username);
-          localStorage.setItem("isLoggedIn", "true");
-          localStorage.setItem("expireTime", Date.now() + 24 * 60 * 60 * 1000);
-          // 登录成功，重定向到主页
-          window.location.href = "./ui.html";
-          return;
-        } else {
-          // 登录失败，显示错误消息
-          showError("用户名或密码错误");
-          // 移除加载状态
-          button.classList.remove("loading");
-          button.disabled = false;
-        }
-      }
-
-      // 优化模态框显示和隐藏效果
-      function showResetModal() {
-        const modal = document.getElementById("resetModal");
-        modal.style.display = "block";
-        // 使用 setTimeout 确保过渡效果生效
-        setTimeout(() => modal.classList.add("active"), 10);
-      }
-
-      function closeResetModal() {
-        const modal = document.getElementById("resetModal");
-        modal.classList.remove("active");
-        // 等待过渡效果完成后隐藏
-        setTimeout(() => {
-          modal.style.display = "none";
-          // 清空输入
-          document.getElementById("securityText").value = "";
-          document.getElementById("newUsername").value = "";
-          document.getElementById("newPassword").value = "";
-          document.getElementById("resetError").textContent = "";
-        }, 300);
-      }
-
-      // 点击遮罩层关闭模态框
-      document.getElementById("resetModal").addEventListener("click", (e) => {
-        if (e.target.className === "modal active") {
-          closeResetModal();
-        }
-      });
-
-      // 阻止模态框内容点击事件冒泡
-      document
-        .querySelector(".modal-content")
-        .addEventListener("click", (e) => {
-          e.stopPropagation();
-        });
-
-      async function resetPassword() {
-        const securityText = document.getElementById("securityText").value;
-        const newUsername = document.getElementById("newUsername").value;
-        const newPassword = document.getElementById("newPassword").value;
-
-        try {
-          const response = await fetch("./json/user.json");
-          const data = await response.json();
-          // 验证安全验证码
-          if (md5(securityText) !== data.securityText) {
-            document.getElementById("resetError").textContent =
-              "安全验证码错误";
-            return;
-          }
-          data.username = newUsername;
-          data.password = md5(newPassword);
-          // 保存修改后的 JSON 文件
-          await fetch("./json/user.json", {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-          });
-          alert("用户名和密码重置成功！请使用新的用户名和密码登录");
-          closeResetModal();
-        } catch (error) {
-          console.error("重置密码错误:", error);
-          document.getElementById("resetError").textContent =
-            "重置失败，请重试";
-        }
-      }
-
-      // 添加错误消息动画显示
-      function showError(message) {
-        const errorDiv = document.getElementById("error");
-        errorDiv.textContent = message;
-        errorDiv.style.display = "block";
-
-        // 3秒后自动隐藏错误信息
-        setTimeout(() => {
-          errorDiv.style.display = "none";
-        }, 3000);
-      }
-    </script>
     <footer>
-      <p style="font-size: 12px">
+      <p style="font-size: 12px;">
         版权所有 &copy; 路安汽配 配件管理系统 |
         <a href="#" style="color: rgb(255, 255, 255)">隐私政策</a>
       </p>
       <!--为div注册点击事件-->
-      <div
-        style="font-size: 12px"
-        onclick="window.open('https://beian.mps.gov.cn/#/query/webSearch')"
-      >
+      <div style="font-size: 12px;" onclick="window.open('https://beian.mps.gov.cn/#/query/webSearch')">
         <img
           data-v-4fe9a924=""
           src="./img/netsafe.png"
@@ -678,3 +192,25 @@
     </footer>
   </body>
 </html>
+<!--
+                   _ooOoo_
+                  o8888888o
+                  88" . "88
+                  (| -_- |)
+                  O\  =  /O
+               ____/`---'\____
+             .'  \\|     |//  `.
+            /  \\|||  :  |||//  \
+           /  _||||| -:- |||||-  \
+           |   | \\\  -  /// |   |
+           | \_|  ''\---/''  |   |
+           \  .-\__  `-`  ___/-. /
+         ___`. .'  /--.--\  `. . __
+      ."" '<  `.___\_<|>_/___.'  >'"".
+     | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+     \  \ `-.   \_ __\ /__ _/   .-` /  /
+======`-.____`-.___\_____/___.-`____.-'======
+                   `=---='
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            佛祖保佑       永无BUG
+-->

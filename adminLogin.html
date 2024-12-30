@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
-    
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>登录管理员账号</title>
+    <link rel="shortcut icon" href="./img/xy.ico" type="image/x-icon" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
     <script>
       function md5(string) {
@@ -35,41 +35,6 @@
         overflow: hidden;
       }
 
-      body::before,
-      body::after {
-        content: "";
-        position: absolute;
-        width: 300px;
-        height: 300px;
-        border-radius: 50%;
-        filter: blur(100px);
-        opacity: 0.2;
-        animation: float 10s infinite ease-in-out;
-      }
-
-      body::before {
-        background: var(--primary-color);
-        top: -100px;
-        left: -100px;
-        animation-delay: -5s;
-      }
-
-      body::after {
-        background: #60a5fa;
-        bottom: -100px;
-        right: -100px;
-      }
-
-      @keyframes float {
-        0%,
-        100% {
-          transform: translate(0, 0);
-        }
-        50% {
-          transform: translate(30px, 30px);
-        }
-      }
-
       .container {
         background: var(--card-bg);
         padding: 2rem;
@@ -91,7 +56,6 @@
         min-height: 400px;
         height: 80vw;
         max-height: 522px;
-        
       }
 
       .container:hover {
@@ -187,8 +151,7 @@
         display: block;
         transition: all 0.3s ease;
         cursor: pointer;
-        position: absolute;
-        
+
         bottom: 5%;
       }
 
@@ -409,7 +372,6 @@
     </style>
   </head>
   <body>
-    
     <div class="container">
       <img src="img/xy.ico" alt="Logo" class="logo" />
       <h2>管理员登录</h2>
@@ -424,34 +386,8 @@
         </div>
         <div id="error" class="error-message"></div>
         <button type="submit">登录</button>
-        <a class="forgot-link" onclick="showResetModal()">忘记密码？</a>
+        <a class="forgot-link" onclick="ResetCode()">忘记密码？</a>
       </form>
-    </div>
-
-    <div id="resetModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>重置密码</h3>
-          <button class="close-btn" onclick="closeResetModal()">&times;</button>
-        </div>
-        <div class="form-group">
-          <label>安全验证码</label>
-          <input type="text" id="securityText" required />
-        </div>
-        <div class="form-group">
-          <label>新用户名</label>
-          <input type="text" id="newUsername" required />
-        </div>
-        <div class="form-group">
-          <label>新密码</label>
-          <input type="password" id="newPassword" required />
-        </div>
-        <div id="resetError" class="error-message"></div>
-        <div class="modal-footer">
-          <button onclick="resetPassword()" class="btn-reset">重置密码</button>
-          <button onclick="closeResetModal()" class="btn-cancel">取消</button>
-        </div>
-      </div>
     </div>
     <div>
       <!--新建div，样式为高斯模糊20px-->
@@ -518,7 +454,7 @@
         button.classList.add("loading");
         button.disabled = true;
         // 读取 JSON 文件
-        const data = await readJsonFile("./json/login.json");
+        const data = await readJsonFile("./json/adminLogin.json");
         if (data.username === username && md5(password) === data.password) {
           // 将用户名和密码存储到localStorage中，24小时后过期
           localStorage.setItem("userType", "admin");
@@ -536,86 +472,9 @@
           button.disabled = false;
         }
       }
-
-      // 优化模态框显示和隐藏效果
-      function showResetModal() {
-        const modal = document.getElementById("resetModal");
-        modal.style.display = "block";
-        // 使用 setTimeout 确保过渡效果生效
-        setTimeout(() => modal.classList.add("active"), 10);
-      }
-
-      function closeResetModal() {
-        const modal = document.getElementById("resetModal");
-        modal.classList.remove("active");
-        // 等待过渡效果完成后隐藏
-        setTimeout(() => {
-          modal.style.display = "none";
-          // 清空输入
-          document.getElementById("securityText").value = "";
-          document.getElementById("newUsername").value = "";
-          document.getElementById("newPassword").value = "";
-          document.getElementById("resetError").textContent = "";
-        }, 300);
-      }
-
-      // 点击遮罩层关闭模态框
-      document.getElementById("resetModal").addEventListener("click", (e) => {
-        if (e.target.className === "modal active") {
-          closeResetModal();
-        }
-      });
-
-      // 阻止模态框内容点击事件冒泡
-      document
-        .querySelector(".modal-content")
-        .addEventListener("click", (e) => {
-          e.stopPropagation();
-        });
-
-      async function resetPassword() {
-        const securityText = document.getElementById("securityText").value;
-        const newUsername = document.getElementById("newUsername").value;
-        const newPassword = document.getElementById("newPassword").value;
-
-        try {
-          const response = await fetch("./json/login.json");
-          const data = await response.json();
-          // 验证安全验证码
-          if (md5(securityText) !== data.securityText) {
-            document.getElementById("resetError").textContent =
-              "安全验证码错误";
-            return;
-          }
-          data.username = newUsername;
-          data.password = md5(newPassword);
-          // 保存修改后的 JSON 文件
-          await fetch("./json/login.json", {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-          });
-          alert("用户名和密码重置成功！请使用新的用户名和密码登录");
-          closeResetModal();
-        } catch (error) {
-          console.error("重置密码错误:", error);
-          document.getElementById("resetError").textContent =
-            "重置失败，请重试";
-        }
-      }
-
-      // 添加错误消息动画显示
-      function showError(message) {
-        const errorDiv = document.getElementById("error");
-        errorDiv.textContent = message;
-        errorDiv.style.display = "block";
-
-        // 3秒后自动隐藏错误信息
-        setTimeout(() => {
-          errorDiv.style.display = "none";
-        }, 3000);
+      function ResetCode() {
+        localStorage.setItem("WhoForgot", "admin");
+        window.location.href = "./userForgot.html";
       }
     </script>
     <footer>
@@ -627,9 +486,8 @@
       <div onclick="window.open('https://beian.mps.gov.cn/#/query/webSearch')">
         <!--备案号:冀ICP备2024096973号-->
         <img
-          data-v-4fe9a924=""
           src="./img/netsafe.png"
-          style="height: 20px;width: 20px;"
+          style="height: 20px; width: 20px"
           alt="Netsafe Logo"
         />
         冀ICP备2024096973号-1
@@ -637,3 +495,25 @@
     </footer>
   </body>
 </html>
+<!--
+                   _ooOoo_
+                  o8888888o
+                  88" . "88
+                  (| -_- |)
+                  O\  =  /O
+               ____/`---'\____
+             .'  \\|     |//  `.
+            /  \\|||  :  |||//  \
+           /  _||||| -:- |||||-  \
+           |   | \\\  -  /// |   |
+           | \_|  ''\---/''  |   |
+           \  .-\__  `-`  ___/-. /
+         ___`. .'  /--.--\  `. . __
+      ."" '<  `.___\_<|>_/___.'  >'"".
+     | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+     \  \ `-.   \_ __\ /__ _/   .-` /  /
+======`-.____`-.___\_____/___.-`____.-'======
+                   `=---='
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            佛祖保佑       永无BUG
+-->

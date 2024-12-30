@@ -424,7 +424,8 @@
       }
     </style>
   </head>
-  <body>
+  <body><div style="position: fixed;width: 100vw;height: 100vh;z-index: 1000000;background-color: #ffffff;text-align: center;font-size: 100px;">未完成</div>
+    
     <div class="loading">
       <!--img显示div中心-->
       <img
@@ -465,7 +466,6 @@
           </div>
         </div>
       </aside>
-
       <main class="main-content">
         <header class="header">
           <h2>管理员面板</h2>
@@ -594,7 +594,7 @@
         const currentUser = localStorage.getItem("currentUser");
 
         if (!isLoggedIn || userType !== "admin") {
-          window.location.href = "login.html";
+          window.location.href = "adminLogin.html";
           return;
         } else {
           document.querySelector(".loading").style.display = "none";
@@ -610,7 +610,7 @@
       // 退出登录
       function logout() {
         localStorage.clear();
-        window.location.href = "login.html";
+        window.location.href = "adminLogin.html";
       }
     </script>
     <footer>
@@ -634,3 +634,25 @@
     </footer>
   </body>
 </html>
+<!--
+                   _ooOoo_
+                  o8888888o
+                  88" . "88
+                  (| -_- |)
+                  O\  =  /O
+               ____/`---'\____
+             .'  \\|     |//  `.
+            /  \\|||  :  |||//  \
+           /  _||||| -:- |||||-  \
+           |   | \\\  -  /// |   |
+           | \_|  ''\---/''  |   |
+           \  .-\__  `-`  ___/-. /
+         ___`. .'  /--.--\  `. . __
+      ."" '<  `.___\_<|>_/___.'  >'"".
+     | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+     \  \ `-.   \_ __\ /__ _/   .-` /  /
+======`-.____`-.___\_____/___.-`____.-'======
+                   `=---='
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            佛祖保佑       永无BUG
+-->
