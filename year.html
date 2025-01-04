@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>新年倒计时</title>
+    <style>
+      :root {
+        --primary-color: #3498db;
+        --secondary-color: #0fd7f1;
+        --background-dark: #1e3c72;
+        --background-light: #2a5298;
+        --text-color: #ffffff;
+        --glass-bg: rgba(255, 255, 255, 0.1);
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: linear-gradient(
+          135deg,
+          var(--background-dark),
+          var(--background-light)
+        );
+        color: var(--text-color);
+        font-family: "Microsoft YaHei", sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .star-field {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(1px 1px at 50% 50%, #fff, transparent),
+          radial-gradient(2px 2px at 30% 30%, #fff, transparent),
+          radial-gradient(1px 1px at 70% 70%, #fff, transparent);
+        background-size: 200px 200px;
+        animation: starMove 60s linear infinite;
+        opacity: 0.3;
+      }
+
+      @keyframes starMove {
+        from {
+          transform: translateY(0);
+        }
+        to {
+          transform: translateY(-200px);
+        }
+      }
+
+      .container {
+        position: relative;
+        z-index: 1;
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+      }
+
+      .countdown {
+        font-size: 2.5em;
+        text-align: center;
+        margin-bottom: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .countdown-title {
+        width: 100%;
+        font-size: 0.8em;
+        margin-bottom: 20px;
+        color: var(--primary-color);
+        text-shadow: 0 0 10px rgba(52, 152, 219, 0.4);
+      }
+
+      .digit-display {
+        display: inline-flex;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.3);
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .digit-wrapper {
+        width: 1em;
+        height: 1.5em;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        overflow: hidden;
+        margin: 0 2px;
+        position: relative;
+      }
+
+      .digit-scroll {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transform-origin: 50% 0;
+      }
+
+      .digit {
+        height: 1.5em;
+        width: 1em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: var(--secondary-color);
+        text-shadow: 0 0 15px rgba(15, 215, 241, 0.8);
+      }
+
+      .unit {
+        font-size: 0.5em;
+        margin: 0 5px;
+        min-width: 1.5em;
+        text-align: left;
+      }
+
+      .wish-input {
+        width: 300px;
+        padding: 15px;
+        border: none;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.9);
+        margin-right: 10px;
+        font-size: 16px;
+      }
+
+      .wish-button {
+        position: relative;
+        top: 10px;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(
+          45deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .wish-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+      }
+
+      .blessing {
+        margin-top: 20px;
+        font-size: 1.2em;
+        text-align: center;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+
+      .blessing.show {
+        opacity: 1;
+      }
+
+      /* 修改天数显示容器样式 */
+      .digit-display[data-type="天"] {
+        padding: 15px 20px;
+      }
+
+      .digit-display[data-type="天"] .digit-wrapper {
+        width: 0.9em; /* 略微加宽数字容器 */
+      }
+
+      /* 添加雪花样式 */
+      .snowflake {
+        position: fixed;
+        color: #fff;
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+        z-index: 0;
+        pointer-events: none;
+        will-change: transform;
+        animation: float-y 6s linear infinite;
+      }
+
+      .snowflake::after {
+        content: "❅";
+        position: absolute;
+        animation: float-x 3s ease-in-out infinite alternate;
+      }
+
+      @keyframes float-y {
+        0% {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 0.8;
+        }
+        100% {
+          transform: translateY(100vh);
+          opacity: 0;
+        }
+      }
+
+      @keyframes float-x {
+        0% {
+          transform: translateX(0) rotate(0deg);
+        }
+        50% {
+          transform: translateX(30px) rotate(180deg);
+        }
+        100% {
+          transform: translateX(-30px) rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="star-field"></div>
+    <div class="container">
+      <div class="countdown"></div>
+      <div
+        class="wish-form"
+        style="
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          text-align: center;
+        "
+      >
+        <input
+          type="text"
+          class="wish-input"
+          placeholder="写下你的新年愿望..."
+        />
+        <button class="wish-button">送出祝福</button>
+      </div>
+      <div class="blessing"></div>
+    </div>
+
+    <script>
+      class CountdownTimer {
+        constructor(selector) {
+          this.container = document.querySelector(selector);
+          this.festival = "元旦";
+          this.prevValues = {};
+          this.initDisplay();
+          this.start();
+        }
+
+        initDisplay() {
+          // 添加标题div
+          this.container.innerHTML = `
+                    <div class="countdown-title">距离<span class="festival-year"></span>年${this.festival}还有</div>
+                `;
+
+          const units = ["天", "时", "分", "秒"];
+          const displays = units
+            .map((unit) => {
+              const isDay = unit === "天";
+              return `
+                        <div class="digit-display" data-type="${unit}">
+                            ${
+                              isDay
+                                ? `
+                                <div class="digit-wrapper">
+                                    <div class="digit-scroll" data-unit="${unit}-hundreds">
+                                        ${Array.from(
+                                          { length: 10 },
+                                          (_, i) =>
+                                            `<div class="digit">${i}</div>`
+                                        ).join("")}
+                                    </div>
+                                </div>
+                            `
+                                : ""
+                            }
+                            <div class="digit-wrapper">
+                                <div class="digit-scroll" data-unit="${unit}-tens">
+                                    ${Array.from(
+                                      { length: 10 },
+                                      (_, i) => `<div class="digit">${i}</div>`
+                                    ).join("")}
+                                </div>
+                            </div>
+                            <div class="digit-wrapper">
+                                <div class="digit-scroll" data-unit="${unit}-ones">
+                                    ${Array.from(
+                                      { length: 10 },
+                                      (_, i) => `<div class="digit">${i}</div>`
+                                    ).join("")}
+                                </div>
+                            </div>
+                            <span class="unit">${unit}</span>
+                        </div>
+                    `;
+            })
+            .join("");
+
+          this.container.insertAdjacentHTML("beforeend", displays);
+        }
+
+        updateDigit(unit, value, position) {
+          const key = `${unit}-${position}`;
+          const element = document.querySelector(`[data-unit="${key}"]`);
+          if (!element) return;
+
+          const newValue = parseInt(value);
+          if (this.prevValues[key] === newValue) return;
+
+          element.style.transform = `translateY(-${newValue * 1.5}em)`;
+          this.prevValues[key] = newValue;
+        }
+
+        checkFestival(now) {
+          const currentYear = now.getFullYear();
+          const newYear = new Date(currentYear + 1, 0, 1);
+          // 这里可以添加农历春节的判断逻辑
+          // const springFestival = new Date(...);
+
+          if (now > newYear) {
+            this.festival = "春节";
+            return newYear;
+          }
+          this.festival = "元旦";
+          return newYear;
+        }
+
+        update() {
+          const now = new Date();
+          const target = this.checkFestival(now);
+          const diff = target - now;
+
+          // 更新标题年份
+          const yearEl = document.querySelector(".festival-year");
+          if (yearEl) yearEl.textContent = target.getFullYear();
+
+          const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+            .toString()
+            .padStart(3, "0");
+          const hours = Math.floor(
+            (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+          )
+            .toString()
+            .padStart(2, "0");
+          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+            .toString()
+            .padStart(2, "0");
+          const seconds = Math.floor((diff % (1000 * 60)) / 1000)
+            .toString()
+            .padStart(2, "0");
+
+          // 更新天数的三位数
+          this.updateDigit("天", days[0], "hundreds");
+          this.updateDigit("天", days[1], "tens");
+          this.updateDigit("天", days[2], "ones");
+
+          // 更新其他单位
+          this.updateDigit("时", hours[0], "tens");
+          this.updateDigit("时", hours[1], "ones");
+          this.updateDigit("分", minutes[0], "tens");
+          this.updateDigit("分", minutes[1], "ones");
+          this.updateDigit("秒", seconds[0], "tens");
+          this.updateDigit("秒", seconds[1], "ones");
+        }
+
+        start() {
+          this.update();
+          setInterval(() => this.update(), 1000);
+        }
+      }
+
+      // 添加雪花生成器类
+      class SnowfallEffect {
+        constructor() {
+          this.maxSnowflakes = 50;
+          this.activeSnowflakes = new Set();
+          this.snowflakeChars = ["❅", "❆", "❄"];
+          this.viewport = {
+            width: window.innerWidth,
+            height: window.innerHeight,
+          };
+
+          window.addEventListener("resize", () => {
+            this.viewport.width = window.innerWidth;
+            this.viewport.height = window.innerHeight;
+          });
+
+          this.start();
+        }
+
+        createSnowflake() {
+          if (this.activeSnowflakes.size >= this.maxSnowflakes) return;
+
+          const snowflake = document.createElement("div");
+          snowflake.className = "snowflake";
+
+          // 随机属性
+          const startX = Math.random() * this.viewport.width;
+          const size = 0.5 + Math.random() * 1;
+          const duration = 6 + Math.random() * 4; // 6-10秒的随机时间
+          const delay = Math.random() * 2; // 添加随机延迟
+          const swayAmount = 30 + Math.random() * 30; // 30-60px的随机摆动
+          const swayDuration = 2 + Math.random() * 2; // 2-4秒的摆动周期
+
+          // 设置样式
+          Object.assign(snowflake.style, {
+            left: `${startX}px`,
+            top: "-50px",
+            fontSize: `${size}em`,
+            animationDuration: `${duration}s`,
+            animationDelay: `-${delay}s`,
+          });
+
+          // 设置随机摆动
+          const afterStyle = document.createElement("style");
+          const uniqueId = `snow-${Date.now()}-${Math.random()}`;
+          snowflake.setAttribute("id", uniqueId);
+
+          afterStyle.textContent = `
+                    #${uniqueId}::after {
+                        animation: float-x ${swayDuration}s ease-in-out infinite alternate;
+                    }
+                    @keyframes float-x-${uniqueId} {
+                        0% { transform: translateX(0) rotate(0deg); }
+                        50% { transform: translateX(${swayAmount}px) rotate(180deg); }
+                        100% { transform: translateX(-${swayAmount}px) rotate(360deg); }
+                    }
+                `;
+
+          document.head.appendChild(afterStyle);
+          document.body.appendChild(snowflake);
+          this.activeSnowflakes.add(snowflake);
+
+          // 清理
+          snowflake.addEventListener("animationend", () => {
+            snowflake.remove();
+            afterStyle.remove();
+            this.activeSnowflakes.delete(snowflake);
+          });
+        }
+
+        start() {
+          setInterval(() => this.createSnowflake(), 200);
+        }
+      }
+
+      // 初始化倒计时
+      const countdown = new CountdownTimer(".countdown");
+
+      // 初始化雪花效果
+      const snowfall = new SnowfallEffect();
+
+      // 处理愿望提交
+      document.querySelector(".wish-button").addEventListener("click", () => {
+        const wish = document.querySelector(".wish-input").value.trim();
+        if (wish) {
+          const blessing = document.querySelector(".blessing");
+          blessing.textContent = `祝愿您：${wish} ✨ 心想事成，新年快乐！`;
+          blessing.classList.add("show");
+          document.querySelector(".wish-input").value = "";
+        }
+      });
+    </script>
+  </body>
+</html>

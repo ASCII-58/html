@@ -10,6 +10,11 @@
         --text-primary: #333;
         --text-secondary: #666;
       }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
       header {
         background: white;
         height: 64px;
@@ -57,8 +62,7 @@
       }
     </style>
   </head>
-  <body style="height: auto;position: relative;"><div style="position: fixed;width: 100vw;height: 100vh;z-index: 1000000;background-color: #ffffff;text-align: center;font-size: 100px;">未完成</div>
-    
+  <body style="height: auto; position: relative">
     <div class="loading">
       <!--img显示div中心-->
       <img
@@ -96,6 +100,7 @@
             bottom: 3px;
             left: 3px;
           "
+          class="sign"
           onclick="logout()"
         >
           退出登录
@@ -108,8 +113,11 @@
           const isLoggedIn = localStorage.getItem("isLoggedIn");
           const currentUser = localStorage.getItem("User");
           // 判断type是否为undefined
-          if (!userType) {
-            window.location.href = "userLogin.html";
+          if (!isLoggedIn) {
+            document.querySelector(".sign").innerHTML = "登录";
+            document.querySelector(".sign").style.height = "44px";
+            document.querySelector(".sign").style.borderRadius = "5px";
+            document.querySelector(".loading").style.display = "none";
           } else {
             if (!isLoggedIn || userType !== "user") {
               window.location.href = "uaerLogin.html";
@@ -130,7 +138,23 @@
         }
       </script>
     </header>
-    <div style="height: 64px;"></div>
+    <div style="height: auto">
+      <sidebar>
+
+      </sidebar>
+    <div
+      style="
+        width: 100vw;
+        height: 100vh;
+        z-index: 1000000;
+        background-color: #ffffff;
+        text-align: center;
+        font-size: 100px;
+      "
+    >
+      未完成
+    </div></div>
+    <div style="height: 64px"></div>
     <div>
       <div
         style="
@@ -175,12 +199,15 @@
       </script>
     </div>
     <footer>
-      <p style="font-size: 12px;">
+      <p style="font-size: 12px">
         版权所有 &copy; 路安汽配 配件管理系统 |
         <a href="#" style="color: rgb(255, 255, 255)">隐私政策</a>
       </p>
       <!--为div注册点击事件-->
-      <div style="font-size: 12px;" onclick="window.open('https://beian.mps.gov.cn/#/query/webSearch')">
+      <div
+        style="font-size: 12px"
+        onclick="window.open('https://beian.mps.gov.cn/#/query/webSearch')"
+      >
         <img
           data-v-4fe9a924=""
           src="./img/netsafe.png"
