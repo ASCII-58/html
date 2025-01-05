@@ -4,27 +4,49 @@
     <meta charset="UTF-8" />
     <title>用户界面</title>
     <link rel="shortcut icon" href="./img/xy.ico" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
       :root {
-        --primary-color: #002981;
-        --text-primary: #333;
-        --text-secondary: #666;
+        --primary-color: #1890ff;
+        --secondary-color: #40a9ff;
+        --bg-color: #f5f7fa;
+        --text-primary: #2c3e50;
+        --text-secondary: #606266;
+        --header-height: 64px;
+        --sidebar-width: 250px;
+        --border-radius: 8px;
+        --transition: all 0.3s ease;
       }
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
       }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background: var(--bg-color);
+        color: var(--text-primary);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        padding-top: 64px; /* 为固定定位的header留出空间 */
+      }
       header {
-        background: white;
+        background: linear-gradient(135deg, #1890ff, #40a9ff);
         height: 64px;
         padding: 0 20px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
-        position: relative;
+        border-radius: 0;
+        position: fixed;
+        top: 0;
+        width: 100%;
         z-index: 1000;
+        backdrop-filter: blur(8px);
       }
       .user-info {
         align-items: center;
@@ -32,26 +54,103 @@
         width: 120px;
         height: 50px;
         right: 20px;
+        top: 7px;
         border-radius: 6px;
         display: block;
-        right: 0;
-        background-color: #bbeeff;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: var(--transition);
+      }
+      .user-info:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       }
       .loading {
         position: fixed;
         height: 100vh;
         width: 100vw;
         z-index: 99999;
-        background: linear-gradient(135deg, #1a1b1f 0%, #2d3436 100%);
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(5px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .container {
+        display: flex;
+        min-height: calc(100vh - var(--header-height));
+        margin-top: 20px; /* 增加与header的间距 */
+      }
+      .sidebar {
+        width: var(--sidebar-width);
+        background-color: #001c81;
+        display: block;
+        text-align: center;
+        background: white;
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+        padding: 20px 0;
+        min-height: 100%;
+        border-radius: var(--border-radius);
+        margin: 0 10px;
+      }
+      .logo {
+        padding: 20px;
+        text-align: center;
+        border-bottom: 1px solid #eee;
+      }
+      .menu {
+        padding: 20px 0;
+      }
+      .menu-item {
+        padding: 15px 20px;
+        cursor: pointer;
+        transition: var(--transition);
+        border-left: 4px solid transparent;
+        margin: 5px 10px;
+        border-radius: var(--border-radius);
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+      .menu-item:hover {
+        background: var(--bg-color);
+        color: var(--primary-color);
+        transform: translateX(5px);
+      }
+      .active-menu-item {
+        background: var(--primary-color) !important;
+        color: white !important;
+        border-left: none;
+        box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3);
+      }
+      .main-content {
+        flex: 1;
+        padding: 20px;
+        background: white;
+        margin: 20px;
+        border-radius: var(--border-radius);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: var(--transition);
+      }
+      .content-section {
+        display: none;
+        padding: 20px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .content-section.active {
+        display: block;
+        opacity: 1;
       }
       footer {
-        background-color: var(--primary-color);
+        background: linear-gradient(135deg, #1890ff, #40a9ff);
         color: #fff;
         text-align: center;
         padding: 10px 0;
         position: absolute;
         bottom: 0;
         width: 100%;
+        backdrop-filter: blur(8px);
       }
       footer p {
         margin: 0 0 0 0;
@@ -60,9 +159,116 @@
         border: none;
         margin: 0 0 0 0;
       }
+      .sign {
+        background: rgba(255, 255, 255, 0.2) !important;
+        color: white !important;
+        transition: var(--transition);
+        cursor: pointer;
+      }
+      .sign:hover {
+        background: rgba(255, 255, 255, 0.3) !important;
+      }
+
+      /* 汉堡菜单按钮 */
+      .menu-toggle {
+        display: none;
+        position: fixed;
+        left: 20px;
+        top: 15px;
+        z-index: 1001;
+        cursor: pointer;
+        padding: 10px;
+      }
+
+      .menu-toggle span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        background: white;
+        margin: 5px 0;
+        transition: var(--transition);
+      }
+
+      /* 移动端适配 */
+      @media screen and (max-width: 768px) {
+        .menu-toggle {
+          display: block;
+        }
+
+        .sidebar {
+          position: fixed;
+          left: -100%;
+          top: 0;
+          height: 100vh;
+          z-index: 1000;
+          transition: var(--transition);
+          margin: 0;
+        }
+
+        .sidebar.active {
+          left: 0;
+        }
+
+        .main-content {
+          margin: 10px;
+          padding: 15px;
+        }
+
+        .container {
+          margin-top: 10px;
+        }
+
+        .user-info {
+          width: 100px;
+          right: 10px;
+        }
+
+        .sign {
+          width: 94px !important;
+        }
+
+        #userName {
+          width: 96px !important;
+        }
+
+        footer {
+          font-size: 12px;
+          padding: 5px 0;
+        }
+
+        .menu-item {
+          padding: 12px 15px;
+        }
+      }
+
+      /* 暗色遮罩 */
+      .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+      }
+
+      .overlay.active {
+        display: block;
+      }
     </style>
   </head>
   <body style="height: auto; position: relative">
+    <!-- 添加汉堡菜单按钮 -->
+    <div class="menu-toggle" onclick="toggleSidebar()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <!-- 添加遮罩层 -->
+    <div class="overlay" onclick="toggleSidebar()"></div>
+
     <div class="loading">
       <!--img显示div中心-->
       <img
@@ -76,7 +282,7 @@
         "
       />
     </div>
-    <header class="header">
+    <header>
       <div class="user-info">
         <span
           id="userName"
@@ -88,73 +294,228 @@
           "
         ></span>
         <button
+          class="sign"
           style="
             display: block;
             border-bottom-left-radius: 5px;
             border-bottom-right-radius: 5px;
             background-color: #00bfff;
-            margin: 0 0 0 0;
+            margin: 0;
             border: none;
             width: 114px;
             position: absolute;
             bottom: 3px;
             left: 3px;
+            height: 23px;
           "
-          class="sign"
           onclick="logout()"
         >
           退出登录
         </button>
       </div>
-      <script>
-        // 检查登录状态和权限
-        window.onload = function () {
-          const userType = localStorage.getItem("Type");
-          const isLoggedIn = localStorage.getItem("isLoggedIn");
-          const currentUser = localStorage.getItem("User");
-          // 判断type是否为undefined
-          if (!isLoggedIn) {
-            document.querySelector(".sign").innerHTML = "登录";
-            document.querySelector(".sign").style.height = "44px";
-            document.querySelector(".sign").style.borderRadius = "5px";
-            document.querySelector(".loading").style.display = "none";
-          } else {
-            if (!isLoggedIn || userType !== "user") {
-              window.location.href = "uaerLogin.html";
-              return;
-            } else {
-              document.querySelector(".loading").style.display = "none";
-            }
-          }
-
-          // 显示管理员名称
-          document.getElementById("userName").textContent = currentUser;
-        };
-
-        // 退出登录
-        function logout() {
-          localStorage.clear();
-          window.location.href = "userLogin.html";
-        }
-      </script>
     </header>
-    <div style="height: auto">
-      <sidebar>
 
-      </sidebar>
-    <div
-      style="
-        width: 100vw;
-        height: 100vh;
-        z-index: 1000000;
-        background-color: #ffffff;
-        text-align: center;
-        font-size: 100px;
-      "
-    >
-      未完成
-    </div></div>
-    <div style="height: 64px"></div>
+    <script>
+      // 切换内容显示
+      function showContent(sectionId) {
+        // 保存当前选中的section到localStorage
+        localStorage.setItem("currentSection", sectionId);
+
+        // 更新内容显示
+        document.querySelectorAll(".content-section").forEach((section) => {
+          section.classList.remove("active");
+          section.style.opacity = "0";
+        });
+
+        const targetSection = document.getElementById(sectionId);
+        targetSection.classList.add("active");
+        // 添加淡入效果
+        setTimeout(() => {
+          targetSection.style.opacity = "1";
+        }, 50);
+
+        // 更新菜单项状态
+        document.querySelectorAll(".menu-item").forEach((item) => {
+          item.classList.remove("active-menu-item");
+        });
+        document
+          .querySelector(`.menu-item[onclick="showContent('${sectionId}')"]`)
+          .classList.add("active-menu-item");
+      }
+    </script>
+    <script>
+      // 检查登录状态和权限
+      window.onload = function () {
+        const currentUser = localStorage.getItem("User");
+        const userType = localStorage.getItem("Type");
+        const isLoggedIn = localStorage.getItem("isLoggedIn");
+
+        // 修改登录判断逻辑
+        if (!isLoggedIn) {
+          document.querySelector(".sign").innerHTML = "登录";
+          document.querySelector(".sign").style.height = "44px";
+          document.querySelector(".sign").style.borderRadius = "5px";
+          // 移除自动登录重定向
+          document.getElementById("userName").textContent = " ";
+        } else {
+          document.getElementById("userName").textContent = currentUser;
+        }
+        document.querySelector(".loading").style.display = "none";
+      };
+
+      // 修改登录函数，改为点击时才跳转
+      function login() {
+        return function () {
+          // 返回一个函数，而不是直接执行
+          window.location.href = "userLogin.html";
+        };
+      }
+
+      // 退出登录
+      function logout() {
+        localStorage.clear();
+        document.querySelector(".sign").innerHTML = "登录";
+        document.querySelector(".sign").style.height = "44px";
+        document.querySelector(".sign").style.borderRadius = "5px";
+        document.getElementById("userName").textContent = " ";
+        document.querySelector(".sign").onclick = login();
+      }
+    </script>
+    <script>
+      // 修复登录状态检查
+      window.onload = function () {
+        const currentUser = localStorage.getItem("User");
+        const userType = localStorage.getItem("Type");
+        const isLoggedIn = localStorage.getItem("isLoggedIn");
+        const userNameElement = document.getElementById("userName");
+        const signButton = document.querySelector(".sign");
+        const loadingElement = document.querySelector(".loading");
+
+        if (!isLoggedIn) {
+          if (signButton) {
+            signButton.innerHTML = "登录";
+            signButton.style.height = "44px";
+            signButton.style.borderRadius = "5px";
+            signButton.onclick = login();
+          }
+          if (userNameElement) {
+            userNameElement.textContent = " ";
+          }
+        } else {
+          if (userNameElement) {
+            userNameElement.textContent = currentUser;
+          }
+        }
+
+        // 确保加载动画被隐藏
+        if (loadingElement) {
+          loadingElement.style.display = "none";
+        }
+      };
+
+      // 修改登录和登出函数
+      function login() {
+        return function () {
+          window.location.href = "userLogin.html";
+        };
+      }
+
+      function logout() {
+        localStorage.clear();
+        const signButton = document.querySelector(".sign");
+        const userNameElement = document.getElementById("userName");
+
+        if (signButton) {
+          signButton.innerHTML = "登录";
+          signButton.style.height = "44px";
+          signButton.style.borderRadius = "5px";
+          signButton.onclick = login();
+        }
+
+        if (userNameElement) {
+          userNameElement.textContent = " ";
+        }
+      }
+
+      // 添加侧边栏切换功能
+      function toggleSidebar() {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.overlay');
+        const menuToggle = document.querySelector('.menu-toggle');
+        
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+        
+        // 切换汉堡按钮动画
+        const spans = menuToggle.getElementsByTagName('span');
+        if(sidebar.classList.contains('active')) {
+          spans[0].style.transform = 'rotate(45deg) translate(6px, 6px)';
+          spans[1].style.opacity = '0';
+          spans[2].style.transform = 'rotate(-45deg) translate(6px, -6px)';
+        } else {
+          spans[0].style.transform = 'none';
+          spans[1].style.opacity = '1';
+          spans[2].style.transform = 'none';
+        }
+      }
+
+      // 点击菜单项时关闭侧边栏
+      document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', () => {
+          if(window.innerWidth <= 768) {
+            toggleSidebar();
+          }
+        });
+      });
+
+      // 监听窗口大小变化
+      window.addEventListener('resize', () => {
+        if(window.innerWidth > 768) {
+          const sidebar = document.querySelector('.sidebar');
+          const overlay = document.querySelector('.overlay');
+          sidebar.classList.remove('active');
+          overlay.classList.remove('active');
+        }
+      });
+    </script>
+    <div class="container">
+      <aside class="sidebar">
+        <div class="logo">
+          <h2>用户界面</h2>
+        </div>
+        <div class="menu">
+          <div
+            class="menu-item active-menu-item"
+            onclick="showContent('homePageSection')"
+          >
+            主页
+          </div>
+          <div class="menu-item" onclick="showContent('partsOverviewSection')">
+            配件总览
+          </div>
+          <div class="menu-item" onclick="showContent('orderShoppingSection')">
+            预约与购物
+          </div>
+          <div class="menu-item" onclick="showContent('userCenterSection')">
+            用户中心
+          </div>
+        </div>
+      </aside>
+      <main class="main-content">
+        <div class="content">
+          <div id="homePageSection" class="content-section active">
+            <h1>主页</h1>
+            1
+          </div>
+          <div id="partsOverviewSection" class="content-section"><h1>配件总览</h1></div>
+          <div id="orderShoppingSection" class="content-section"><h1>预约与购物</h1></div>
+          <div id="userCenterSection" class="content-section"><h1>用户中心</h1></div>
+        </div>
+      </main>
+    </div>
+
+    <!-- 添加用户信息区域到header -->
+
     <div>
       <div
         style="
@@ -175,27 +536,38 @@
       ></div>
 
       <script>
-        let cursor;
-        let mouseX = 0;
-        let mouseY = 0;
-
+        // 页面加载完成后的初始化
         document.addEventListener("DOMContentLoaded", () => {
-          cursor = document.querySelector(".cursor-effect");
+          // 恢复上次选中的section
+          const lastSection =
+            localStorage.getItem("currentSection") || "homePageSection";
+          showContent(lastSection);
+
+          // 优化鼠标特效
+          const cursor = document.getElementById("cursor");
+          let mouseX = 0,
+            mouseY = 0;
+          let cursorX = 0,
+            cursorY = 0;
 
           document.addEventListener("mousemove", (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
           });
 
-          requestAnimationFrame(updateCursor);
-        });
+          function updateCursor() {
+            const dx = mouseX - cursorX;
+            const dy = mouseY - cursorY;
 
-        function updateCursor() {
-          document.getElementById(
-            "cursor"
-          ).style.transform = `translate(${mouseX}px, ${mouseY}px)`;
-          requestAnimationFrame(updateCursor);
-        }
+            cursorX += dx * 0.2;
+            cursorY += dy * 0.2;
+
+            cursor.style.transform = `translate(${cursorX}px, ${cursorY}px)`;
+            requestAnimationFrame(updateCursor);
+          }
+
+          updateCursor();
+        });
       </script>
     </div>
     <footer>
