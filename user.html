@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <title>用户界面</title>
     <link rel="shortcut icon" href="./img/xy.ico" type="image/x-icon" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
       :root {
         --primary-color: #1890ff;
@@ -439,42 +439,42 @@
 
       // 添加侧边栏切换功能
       function toggleSidebar() {
-        const sidebar = document.querySelector('.sidebar');
-        const overlay = document.querySelector('.overlay');
-        const menuToggle = document.querySelector('.menu-toggle');
-        
-        sidebar.classList.toggle('active');
-        overlay.classList.toggle('active');
-        
+        const sidebar = document.querySelector(".sidebar");
+        const overlay = document.querySelector(".overlay");
+        const menuToggle = document.querySelector(".menu-toggle");
+
+        sidebar.classList.toggle("active");
+        overlay.classList.toggle("active");
+
         // 切换汉堡按钮动画
-        const spans = menuToggle.getElementsByTagName('span');
-        if(sidebar.classList.contains('active')) {
-          spans[0].style.transform = 'rotate(45deg) translate(6px, 6px)';
-          spans[1].style.opacity = '0';
-          spans[2].style.transform = 'rotate(-45deg) translate(6px, -6px)';
+        const spans = menuToggle.getElementsByTagName("span");
+        if (sidebar.classList.contains("active")) {
+          spans[0].style.transform = "rotate(45deg) translate(6px, 6px)";
+          spans[1].style.opacity = "0";
+          spans[2].style.transform = "rotate(-45deg) translate(6px, -6px)";
         } else {
-          spans[0].style.transform = 'none';
-          spans[1].style.opacity = '1';
-          spans[2].style.transform = 'none';
+          spans[0].style.transform = "none";
+          spans[1].style.opacity = "1";
+          spans[2].style.transform = "none";
         }
       }
 
       // 点击菜单项时关闭侧边栏
-      document.querySelectorAll('.menu-item').forEach(item => {
-        item.addEventListener('click', () => {
-          if(window.innerWidth <= 768) {
+      document.querySelectorAll(".menu-item").forEach((item) => {
+        item.addEventListener("click", () => {
+          if (window.innerWidth <= 768) {
             toggleSidebar();
           }
         });
       });
 
       // 监听窗口大小变化
-      window.addEventListener('resize', () => {
-        if(window.innerWidth > 768) {
-          const sidebar = document.querySelector('.sidebar');
-          const overlay = document.querySelector('.overlay');
-          sidebar.classList.remove('active');
-          overlay.classList.remove('active');
+      window.addEventListener("resize", () => {
+        if (window.innerWidth > 768) {
+          const sidebar = document.querySelector(".sidebar");
+          const overlay = document.querySelector(".overlay");
+          sidebar.classList.remove("active");
+          overlay.classList.remove("active");
         }
       });
     </script>
@@ -507,9 +507,20 @@
             <h1>主页</h1>
             1
           </div>
-          <div id="partsOverviewSection" class="content-section"><h1>配件总览</h1></div>
-          <div id="orderShoppingSection" class="content-section"><h1>预约与购物</h1></div>
-          <div id="userCenterSection" class="content-section"><h1>用户中心</h1></div>
+          <div id="partsOverviewSection" class="content-section">
+            <h1>配件总览</h1>
+          </div>
+          <div id="orderShoppingSection" class="content-section">
+            <h1>预约与购物</h1>
+            <button>预约</button>
+            <div class="book">
+              <form action=""><input type="date" />
+              <button type="submit">确定预约</button></form>
+            </div>
+          </div>
+          <div id="userCenterSection" class="content-section">
+            <h1>用户中心</h1>
+          </div>
         </div>
       </main>
     </div>
