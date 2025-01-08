@@ -256,6 +256,26 @@
       .overlay.active {
         display: block;
       }
+
+      .book {
+        position: fixed;
+        width: 80vw;
+        height: 80vh;
+        z-index: 10000;
+        background-color: #00a6ff40;
+        text-align: center;
+        filter: blur(100px);
+        transition: all 0.75s ease;
+        border-radius: 10px;
+        /*设置定位点到元素中心*/
+        transform: translate(-50%, -50%);
+        left: 50%;
+        top: 50%;
+        backdrop-filter: blur(20px);
+        opacity: 0;
+        /*设置透过点击*/
+        pointer-events: none;
+      }
     </style>
   </head>
   <body style="height: auto; position: relative">
@@ -512,10 +532,39 @@
           </div>
           <div id="orderShoppingSection" class="content-section">
             <h1>预约与购物</h1>
-            <button>预约</button>
+            <button onclick="showBook()">预约</button>
+            <script>
+              function showBook() {
+                document.querySelector(".book").style.opacity = 1;
+                document.querySelector(".book").style.pointerEvents = "auto";
+                document.querySelector(".book").style.filter = "blur(0px)";
+                
+              }
+              function cancel() {
+                document.querySelector(".book").style.opacity = 0;
+                document.querySelector(".book").style.pointerEvents = "none";
+                document.querySelector(".book").style.filter = "blur(100px)";
+                
+              }
+            </script>
             <div class="book">
-              <form action=""><input type="date" />
-              <button type="submit">确定预约</button></form>
+              <button
+                style="
+                  background-color: #00000000;
+                  border: none;
+                  margin: 0;
+                  position: absolute;
+                  right: 5px;
+                  top: 5px;
+                "
+                onclick="cancel()"
+              >
+                <img src="./img/ic_public_cancel_filled.svg" alt="cancel" />
+              </button>
+              <form action="">
+                <input type="datetime-local" name="date" />
+                <button type="submit">确定预约</button>
+              </form>
             </div>
           </div>
           <div id="userCenterSection" class="content-section">
