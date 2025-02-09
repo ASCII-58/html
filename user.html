@@ -191,8 +191,21 @@
 
       /* 移动端适配 */
       @media screen and (max-width: 768px) {
+        html {
+          font-size: 14px;
+        }
+
         .menu-toggle {
           display: block;
+          padding: 12px;
+          top: 12px;
+          left: 12px;
+        }
+
+        .menu-toggle span {
+          width: 28px;
+          height: 3px;
+          margin: 6px 0;
         }
 
         .sidebar {
@@ -200,9 +213,11 @@
           left: -100%;
           top: 0;
           height: 100vh;
+          width: 280px;
           z-index: 1000;
-          transition: var(--transition);
+          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           margin: 0;
+          box-shadow: 2px 0 12px rgba(0, 0, 0, 0.15);
         }
 
         .sidebar.active {
@@ -210,34 +225,126 @@
         }
 
         .main-content {
-          margin: 10px;
-          padding: 15px;
+          margin: 8px;
+          padding: 12px;
+          min-height: calc(100vh - 120px);
         }
 
         .container {
-          margin-top: 10px;
+          margin-top: 8px;
         }
 
         .user-info {
-          width: 100px;
-          right: 10px;
+          width: 120px;
+          right: 12px;
+          height: 60px;
+          padding: 8px;
         }
 
         .sign {
-          width: 94px !important;
+          width: 110px !important;
+          height: 24px;
+          font-size: 13px;
         }
 
         #userName {
-          width: 96px !important;
+          width: 110px !important;
+          font-size: 14px;
         }
 
         footer {
           font-size: 12px;
-          padding: 5px 0;
+          padding: 12px 0;
+          margin-top: 20px;
         }
 
         .menu-item {
-          padding: 12px 15px;
+          padding: 14px 20px;
+          margin: 4px 8px;
+          font-size: 14px;
+        }
+
+        .book {
+          width: 90vw;
+          height: 80vh;
+          padding: 20px;
+        }
+
+        input[type="datetime-local"] {
+          font-size: 14px;
+          padding: 10px;
+        }
+
+        button[type="submit"] {
+          padding: 10px 20px;
+          font-size: 14px;
+        }
+
+        .content-section {
+          padding: 12px;
+        }
+
+        h1 {
+          font-size: 24px;
+          margin-bottom: 16px;
+        }
+      }
+
+      @media screen and (max-width: 480px) {
+        html {
+          font-size: 13px;
+        }
+
+        .menu-toggle {
+          padding: 10px;
+        }
+
+        .sidebar {
+          width: 260px;
+        }
+
+        .main-content {
+          margin: 6px;
+          padding: 10px;
+        }
+
+        .user-info {
+          width: 100px;
+          right: 8px;
+          height: 56px;
+        }
+
+        .sign {
+          width: 96px !important;
+          font-size: 12px;
+        }
+
+        #userName {
+          width: 96px !important;
+          font-size: 13px;
+        }
+
+        .menu-item {
+          padding: 12px 16px;
+          font-size: 13px;
+        }
+
+        .book {
+          padding: 16px;
+        }
+
+        input[type="datetime-local"] {
+          font-size: 13px;
+          padding: 8px;
+        }
+
+        button[type="submit"] {
+          padding: 8px 16px;
+          font-size: 13px;
+        }
+
+        h1 {
+          font-size: 22px;
         }
       }
 
@@ -275,6 +382,127 @@
         opacity: 0;
         /*设置透过点击*/
         pointer-events: none;
+      }
+
+      /* 预约板块样式 */
+      .booking-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .booking-btn {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: var(--border-radius);
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3);
+      }
+
+      .booking-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(24, 144, 255, 0.4);
+      }
+
+      /* 预约弹窗样式优化 */
+      .book {
+        max-width: 500px;
+        width: 90%;
+        height: auto;
+        max-height: 90vh;
+        background: white;
+        padding: 30px;
+        overflow-y: auto;
+      }
+
+      .book-header {
+        margin-bottom: 25px;
+        text-align: left;
+        border-bottom: 2px solid var(--primary-color);
+        padding-bottom: 15px;
+        position: relative;
+      }
+
+      .book-title {
+        font-size: 24px;
+        color: var(--text-primary);
+        margin: 0;
+      }
+
+      .book-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .form-group {
+        text-align: left;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--text-secondary);
+        font-size: 14px;
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #eee;
+        border-radius: var(--border-radius);
+        font-size: 15px;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus {
+        border-color: var(--primary-color);
+        background: white;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.1);
+      }
+
+      .close-btn {
+        position: absolute;
+        right: 0;
+        top: 0;
+        background: none;
+        border: none;
+        cursor: pointer;
+        opacity: 0.6;
+        transition: all 0.3s ease;
+        padding: 8px;
+      }
+
+      .close-btn:hover {
+        opacity: 1;
+        transform: rotate(90deg);
+      }
+
+      .submit-btn {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: var(--border-radius);
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 10px;
+      }
+
+      .submit-btn:hover {
+        background: var(--secondary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
       }
     </style>
   </head>
@@ -514,7 +742,7 @@
             配件总览
           </div>
           <div class="menu-item" onclick="showContent('orderShoppingSection')">
-            预约与购物
+            预约
           </div>
           <div class="menu-item" onclick="showContent('userCenterSection')">
             用户中心
@@ -531,39 +759,49 @@
             <h1>配件总览</h1>
           </div>
           <div id="orderShoppingSection" class="content-section">
-            <h1>预约与购物</h1>
-            <button onclick="showBook()">预约</button>
-            <script>
-              function showBook() {
-                document.querySelector(".book").style.opacity = 1;
-                document.querySelector(".book").style.pointerEvents = "auto";
-                document.querySelector(".book").style.filter = "blur(0px)";
-                
-              }
-              function cancel() {
-                document.querySelector(".book").style.opacity = 0;
-                document.querySelector(".book").style.pointerEvents = "none";
-                document.querySelector(".book").style.filter = "blur(100px)";
-                
-              }
-            </script>
+            <div class="booking-container">
+              <h1>预约维修服务</h1>
+              <p style="margin: 20px 0; color: var(--text-secondary);">
+                选择合适的时间，预约我们的专业维修服务
+              </p>
+              <button class="booking-btn" onclick="showBook()">立即预约</button>
+            </div>
+            
             <div class="book">
-              <button
-                style="
-                  background-color: #00000000;
-                  border: none;
-                  margin: 0;
-                  position: absolute;
-                  right: 5px;
-                  top: 5px;
-                "
-                onclick="cancel()"
-              >
-                <img src="./img/ic_public_cancel_filled.svg" alt="cancel" />
-              </button>
-              <form action="">
-                <input type="datetime-local" name="date" />
-                <button type="submit">确定预约</button>
+              <div class="book-header">
+                <h2 class="book-title">预约服务</h2>
+                <button class="close-btn" onclick="cancel()">
+                  <img src="./img/ic_public_cancel_filled.svg" alt="关闭" width="20">
+                </button>
+              </div>
+              
+              <form class="book-form">
+                <div class="form-group">
+                  <label for="name">姓名</label>
+                  <input type="text" id="name" required placeholder="请输入您的姓名">
+                </div>
+                
+                <div class="form-group">
+                  <label for="phone">联系电话</label>
+                  <input type="tel" id="phone" required placeholder="请输入您的手机号码" pattern="[0-9]{11}">
+                </div>
+                
+                <div class="form-group">
+                  <label for="car-model">车辆型号</label>
+                  <input type="text" id="car-model" required placeholder="请输入您的车辆型号">
+                </div>
+                
+                <div class="form-group">
+                  <label for="datetime">预约时间</label>
+                  <input type="datetime-local" id="datetime" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="description">维修需求描述</label>
+                  <textarea id="description" rows="4" placeholder="请详细描述您的维修需求..." required></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn">提交预约</button>
               </form>
             </div>
           </div>
@@ -649,6 +887,71 @@
         冀ICP备2024096973号-1
       </div>
     </footer>
+    <!-- 在body标签结束前添加以下脚本 -->
+    <script>
+      // 预约相关函数
+      function showBook() {
+        const bookElement = document.querySelector(".book");
+        const overlayElement = document.querySelector(".overlay");
+        
+        // 检查登录状态
+        const isLoggedIn = localStorage.getItem("isLoggedIn");
+        if (!isLoggedIn) {
+          alert("请先登录后再进行预约");
+          return;
+        }
+        
+        if (bookElement) {
+          bookElement.style.opacity = "1";
+          bookElement.style.pointerEvents = "auto";
+          bookElement.style.filter = "blur(0px)";
+          // 显示遮罩
+          overlayElement.classList.add("active");
+        }
+      }
+
+      function cancel() {
+        const bookElement = document.querySelector(".book");
+        const overlayElement = document.querySelector(".overlay");
+        
+        if (bookElement) {
+          bookElement.style.opacity = "0";
+          bookElement.style.pointerEvents = "none";
+          bookElement.style.filter = "blur(100px)";
+          // 隐藏遮罩
+          overlayElement.classList.remove("active");
+        }
+      }
+
+      // 处理预约表单提交
+      document.querySelector(".book-form")?.addEventListener("submit", function(e) {
+        e.preventDefault();
+        
+        // 获取表单数据
+        const formData = {
+          name: document.getElementById("name").value,
+          phone: document.getElementById("phone").value,
+          carModel: document.getElementById("car-model").value,
+          datetime: document.getElementById("datetime").value,
+          description: document.getElementById("description").value
+        };
+        
+        // TODO: 在这里添加发送预约数据到服务器的代码
+        console.log("预约信息:", formData);
+        
+        // 关闭预约窗口
+        cancel();
+        alert("预约成功！我们会尽快与您联系确认。");
+        
+        // 重置表单
+        this.reset();
+      });
+
+      // 点击遮罩层关闭预约窗口
+      document.querySelector(".overlay")?.addEventListener("click", function() {
+        cancel();
+      });
+    </script>
   </body>
 </html>
 <!--
